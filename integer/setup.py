@@ -23,7 +23,7 @@ setup(
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
-        'Framework :: Pyramid :: CrossCompute',
+        'Framework :: Pyramid',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
         'License :: OSI Approved :: MIT License',
     ],
