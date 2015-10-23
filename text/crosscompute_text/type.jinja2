@@ -1,0 +1,9 @@
+{% macro render_query(key) %}
+<label for="{{ key }}_" class="control-label">{{ key }}</label>
+<textarea name="{{ key }}_txt" id="{{ key }}_" class="form-control" rows="10">{{ format_value(key) }}</textarea>
+{% endmacro %}
+
+{% macro render_value(key, text) %}
+{% from 'crosscompute:types/string.jinja2' import render_value with context %}
+{{ render_value(key, text) }}
+{% endmacro %}

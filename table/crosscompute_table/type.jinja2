@@ -1,0 +1,14 @@
+{% macro render_query(key) %}
+<label for="{{ key }}_" class="control-label">{{ key }}</label>
+<textarea name="{{ key }}_csv" id="{{ key }}_" class="form-control" rows="10">{{ format_value(key) }}</textarea>
+{% endmacro %}
+
+{% macro render_value(key, table) %}
+<h3>{{ key }}</h3>
+<table id="{{ key }}_" class="table">
+  <tr>{% for column in table.columns %}<td>{{ column }}</td>{% endfor %}</tr>
+{% for index, row in table[:100].iterrows() %}
+  <tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
+{% endfor %}
+</table>
+{% endmacro %}
