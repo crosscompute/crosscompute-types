@@ -2,17 +2,6 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
-ENTRY_POINTS = """
-[crosscompute.types]
-integer = crosscompute_integer:IntegerType
-count = crosscompute_integer:IntegerType
-length = crosscompute_integer:IntegerType
-"""
-REQUIREMENTS = [
-    'crosscompute',
-    'msgpack-python',
-    'simplejson',
-]
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
@@ -34,5 +23,15 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=REQUIREMENTS,
-    entry_points=ENTRY_POINTS)
+    install_requires=[
+        'crosscompute',
+        'msgpack-python',
+        'simplejson',
+    ],
+    entry_points={
+        'crosscompute.types': [
+            'count = crosscompute_integer:IntegerType',
+            'integer = crosscompute_integer:IntegerType',
+            'length = crosscompute_integer:IntegerType',
+        ],
+    })

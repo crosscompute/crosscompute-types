@@ -2,20 +2,12 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
-ENTRY_POINTS = """
-[crosscompute.types]
-table = crosscompute_table:TableType
-"""
-REQUIREMENTS = [
-    'crosscompute',
-    'pandas',
-]
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
 setup(
     name='crosscompute-table',
-    version='0.1.1',
+    version='0.1.2',
     description='Table data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -31,5 +23,11 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=REQUIREMENTS,
-    entry_points=ENTRY_POINTS)
+    install_requires=[
+        'crosscompute',
+    ],
+    entry_points={
+        'crosscompute.types': [
+            'table = crosscompute_table:TableType',
+        ],
+    })

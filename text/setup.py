@@ -2,13 +2,6 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
-ENTRY_POINTS = """
-[crosscompute.types]
-text = crosscompute_text:TextType
-"""
-REQUIREMENTS = [
-    'crosscompute',
-]
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
@@ -30,5 +23,11 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=REQUIREMENTS,
-    entry_points=ENTRY_POINTS)
+    install_requires=[
+        'crosscompute',
+    ],
+    entry_points={
+        'crosscompute.types': [
+            'text = crosscompute_text:TextType',
+        ],
+    })
