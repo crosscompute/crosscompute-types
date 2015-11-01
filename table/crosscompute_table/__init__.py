@@ -1,5 +1,5 @@
 try:
-    import pandas
+    import pandasxx
 except ImportError:
     from . import _pandas as pandas
 from crosscompute.types import DataType

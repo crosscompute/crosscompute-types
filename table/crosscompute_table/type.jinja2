@@ -6,7 +6,7 @@
 {% macro render_value(key, table) %}
 <h3>{{ key }}</h3>
 <table id="{{ key }}_" class="table">
-  <tr>{% for column in table.columns %}<td>{{ column }}</td>{% endfor %}</tr>
+  <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
 {% for index, row in table[:100].iterrows() %}
   <tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
 {% endfor %}
