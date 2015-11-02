@@ -1,5 +1,8 @@
 import csv
-from io import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 
 class DummyTable(object):
