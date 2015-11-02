@@ -3,7 +3,7 @@ try:
 except ImportError:
     from . import _pandas as pandas
 from crosscompute.types import DataType
-from cStringIO import StringIO
+from io import StringIO
 from os.path import splitext
 
 

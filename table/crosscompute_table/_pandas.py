@@ -1,5 +1,5 @@
 import csv
-from cStringIO import StringIO
+from io import StringIO
 
 
 class DummyTable(object):
@@ -28,7 +28,7 @@ class DummyTable(object):
         for row in self.values:
             csv_writer.writerow(row)
         if not path:
-            s.reset()
+            s.seek(0)
             return s.read()
 
 
@@ -36,7 +36,7 @@ def read_csv(x):
     table_csv = x.read() if hasattr(x, 'read') else open(x, 'rt').read()
     csv_reader = csv.reader(table_csv.strip().splitlines())
     try:
-        columns = csv_reader.next()
+        columns = next(csv_reader)
     except StopIteration:
         columns = []
     return DummyTable(list(csv_reader), columns)
