@@ -7,7 +7,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
 setup(
     name='crosscompute-integer',
-    version='0.1.1',
+    version='0.1.2',
     description='Integer data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
