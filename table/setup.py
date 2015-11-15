@@ -4,10 +4,10 @@ from setuptools import find_packages, setup
 
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
-    'README.rst', 'CHANGES.rst'])
+    'README.rst'])
 setup(
     name='crosscompute-table',
-    version='0.1.3',
+    version='0.3.0',
     description='Table data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
