@@ -47,3 +47,6 @@ class TableType(DataType):
 
     def format(self, table):
         return table.to_csv(index=False)
+
+    def match(self, table):
+        return hasattr(table, 'iterrows')

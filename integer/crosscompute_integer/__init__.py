@@ -35,4 +35,11 @@ class IntegerType(DataType):
         return integer
 
     def format(self, integer):
-        return '%d' % self.parse(integer)
+        return '%d' % integer
+
+    def match(self, integer):
+        try:
+            int(integer)
+        except (TypeError, ValueError):
+            return False
+        return True
