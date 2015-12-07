@@ -31,7 +31,7 @@ class TableType(DataType):
         elif '.json' == extension:
             table = pandas.read_json(path)
         elif '.csv' == extension:
-            table = pandas.read_csv(path)
+            table = pandas.read_csv(path, skipinitialspace=True)
         elif extension in ('.xls', '.xlsx'):
             table = pandas.read_excel(path)
         else:
@@ -40,7 +40,7 @@ class TableType(DataType):
 
     def parse(self, text):
         try:
-            table = pandas.read_csv(StringIO(text))
+            table = pandas.read_csv(StringIO(text), skipinitialspace=True)
         except (TypeError, ValueError):
             raise TypeError('expected_table')
         return table

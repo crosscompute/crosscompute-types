@@ -35,11 +35,13 @@ class DummyTable(object):
             return s.read()
 
 
-def read_csv(x):
+def read_csv(x, skipinitialspace=False):
     table_csv = x.read() if hasattr(x, 'read') else open(x, 'rt').read()
     csv_reader = csv.reader(table_csv.strip().splitlines())
     try:
         columns = next(csv_reader)
     except StopIteration:
         columns = []
+    if skipinitialspace:
+        columns = [c.lstrip() for c in columns]
     return DummyTable(list(csv_reader), columns)
