@@ -1,0 +1,4 @@
+{% macro render_value(key, image_path) %}
+<h3>{{ key }}</h3>
+<img src="{{ image_path.replace(data_folder, '') }}">
+{% endmacro %}
