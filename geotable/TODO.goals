@@ -1,47 +1,53 @@
+Support different naming conventions
+    Fill Color
+    fill_color
+    fill-color
+
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
 
     User specifies nothing else
         default shape = circle
-        default radius = 10 meters
+        default radius in meters = 10
         default stroke = black
-        default fill = yellow
+        default stroke weight in pixels = 5
+        default fill color = yellow
 
-    User specifies marker shape
-        MarkerShape
+    User specifies shape
+        Shape
             Circle
             Triangle
             Square
 
         Do not draw if local group value is blank
 
-    User specifies marker radius (sum over local group by default)
-        MarkerRadius
+    User specifies radius (sum over local group by default)
+        Radius
             Assume that radius units are in meters
-        MarkerRadiusFromSum
-        MarkerRadiusFromMean
-        MarkerRadiusFromMedian
-        MarkerRadiusFromMode
+        RadiusFromSum
+        RadiusFromMean
+        RadiusFromMedian
+        RadiusFromMode
 
-        MarkerRadiusRange10-100
+        RadiusRange10-100
             Normalize to 10-100 meter range
-        MarkerRadiusRange10-100FromSum
-        MarkerRadiusRange10-100FromMean
-        MarkerRadiusRange10-100FromMedian
-        MarkerRadiusRange10-100FromMode
+        RadiusRange10-100FromSum
+        RadiusRange10-100FromMean
+        RadiusRange10-100FromMedian
+        RadiusRange10-100FromMode
 
-        MarkerRadiusInFeet
-        MarkerRadiusInMiles
-        MarkerRadiusInMeters
-        MarkerRadiusInKilometers
+        RadiusInFeet
+        RadiusInMiles
+        RadiusInMeters
+        RadiusInKilometers
 
-        MarkerCircleRadius
-        MarkerTriangleRadius
-        MarkerSquareRadius
+        CircleRadius
+        TriangleRadius
+        SquareRadius
 
         Do not draw if local group value is blank
 
-    User specifies marker fill color
-        MarkerFillColor (default is yellow from mean)
+    User specifies fill color
+        FillColor (default is yellow from mean)
             Yellow (Y)
             Black (K)
             Red (R)
@@ -49,43 +55,67 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
             Blue (B)
             Cyan (C)
             Magenta (M)
-        MarkerFillColorFromMean
-        MarkerFillColorFromMode
+        FillColorFromMean
+        FillColorFromMode
 
-        MarkerFillValue (default is sum)
-        MarkerFillValueFromSum
-        MarkerFillValueFromMean
-        MarkerFillValueFromMode
-        MarkerFillValueFromMedian
+        FillColorValue (default is sum)
+        FillColorValueFromSum
+        FillColorValueFromMean
+        FillColorValueFromMode
+        FillColorValueFromMedian
 
-        MarkerFillRed (default is sum)
-        MarkerFillRedFromSum
-        MarkerFillRedFromMean
-        MarkerFillRedFromMode
-        MarkerFillRedFromMedian
+        FillRed (default is sum)
+        FillRedFromSum
+        FillRedFromMean
+        FillRedFromMode
+        FillRedFromMedian
 
-        MarkerFillBlue
-        MarkerFillGreen
+        FillBlue
+        FillGreen
 
         Do not draw if local group value is blank
 
     User specifies multiple attributes
-        MarkerCircleStrokeBlackFillRedFromMean
+        SquareStrokeWhiteFillRedFromMean
 
 User specifies WKT in any case
 
     User specifies nothing else
         default stroke = black
+        default stroke weight in pixels = 5
         default fill = yellow
 
     User specifies fill color (sum over local group by default)
-        FeatureFillColor
-        FeatureFillValue
+        FillColor
+            Allow hex value
+            Allow single letter abbreviation
+            Allow word
+        FillColorValue
 
-        FeatureFillRed
-        FeatureFillRedFromSum
-        FeatureFillRedFromMean
-        FeatureFillRedFromMedian
-        FeatureFillRedFromMode
+        FillRed
+        FillRedFromSum
+        FillRedFromMean
+        FillRedFromMedian
+        FillRedFromMode
 
         Do not draw if local group value is blank
+
+    User specifies geometry-specific styles
+        Shape
+        Radius
+
+        BufferFillColor
+        BufferDistanceInMeters
+        BufferStroke
+
+        Stroke
+            Solid (S)
+            Dashed (D)
+
+        StrokeColor
+        StrokeColorValue
+
+        StrokeWeightInPixels
+
+        StrokeSolidColor
+        StrokeDashedColor
