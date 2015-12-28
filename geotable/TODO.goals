@@ -41,14 +41,16 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         Do not draw if local group value is blank
 
     User specifies marker fill color
-        MarkerFillColor
-            Yellow (Y default)
+        MarkerFillColor (default is yellow from mean)
+            Yellow (Y)
             Black (K)
             Red (R)
             Green (G)
             Blue (B)
             Cyan (C)
             Magenta (M)
+        MarkerFillColorFromMean
+        MarkerFillColorFromMode
 
         MarkerFillValue (default is sum)
         MarkerFillValueFromSum
