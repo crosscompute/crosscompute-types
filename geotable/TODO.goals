@@ -4,7 +4,6 @@ Support different naming conventions
     fill-color
 
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
-
     User specifies nothing else
         default shape = circle
         default radius in meters = 10
@@ -79,7 +78,6 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         SquareStrokeWhiteFillRedFromMean
 
 User specifies WKT in any case
-
     User specifies nothing else
         default stroke = black
         default stroke weight in pixels = 5
