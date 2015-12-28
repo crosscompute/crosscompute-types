@@ -11,8 +11,8 @@ setTimeout(function() {
     id: 'mapbox.streets'
   }).addTo(map);
 
-  function getColor(d) {
-    return d < 11 ? '#fff7ec': d < 22 ? '#fee8c8': d < 33 ? '#fdd49e': d < 44 ? '#fdbb84': d < 55 ? '#fc8d59': d < 66 ? '#ef6548': d < 77 ? '#d7301f': d < 88 ? '#b30000': '#7f0000';
+  function getColor(x) {
+    return x < 11 ? '#fff7ec': x < 22 ? '#fee8c8': x < 33 ? '#fdd49e': x < 44 ? '#fdbb84': x < 55 ? '#fc8d59': x < 66 ? '#ef6548': x < 77 ? '#d7301f': x < 88 ? '#b30000': '#7f0000';
   }
 
   var markers = [];

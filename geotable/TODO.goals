@@ -1,0 +1,76 @@
+User specifies Longitude, Latitude or Lon, Lat
+    User specifies nothing else
+        default shape = circle
+        default radius = 10 meters
+        default stroke = black
+        default fill = yellow
+    User specifies marker shape
+        MarkerShape
+            Circle
+            Triangle
+            Square
+        Do not draw if local group value is blank
+    User specifies marker radius (sum over local group by default)
+        MarkerRadius
+            Assume that radius units are in meters
+        MarkerRadiusFromSum
+        MarkerRadiusFromMean
+        MarkerRadiusFromMedian
+        MarkerRadiusFromMode
+
+        MarkerRadiusRange10-100
+            Normalize to 10-100 meter range
+        MarkerRadiusRange10-100FromSum
+        MarkerRadiusRange10-100FromMean
+        MarkerRadiusRange10-100FromMedian
+        MarkerRadiusRange10-100FromMode
+
+        MarkerRadiusInFeet
+        MarkerRadiusInMiles
+        MarkerRadiusInMeters
+        MarkerRadiusInKilometers
+
+        MarkerCircleRadius
+        MarkerTriangleRadius
+        MarkerSquareRadius
+
+        Do not draw if local group value is blank
+    User specifies marker fill color
+        MarkerFillColor
+            Yellow (Y default)
+            Black (K)
+            Red (R)
+            Green (G)
+            Blue (B)
+            Cyan (C)
+            Magenta (M)
+
+        MarkerFillValue (default is sum)
+        MarkerFillValueFromSum
+        MarkerFillValueFromMean
+        MarkerFillValueFromMode
+        MarkerFillValueFromMedian
+
+        MarkerFillRed (default is sum)
+        MarkerFillRedFromSum
+        MarkerFillRedFromMean
+        MarkerFillRedFromMode
+        MarkerFillRedFromMedian
+
+        MarkerFillBlue
+        MarkerFillGreen
+
+        Do not draw if local group value is blank
+    User specifies multiple attributes
+        MarkerCircleStrokeBlackFillRedFromMean
+User specifies WKT
+    User specifies nothing else
+        default stroke = black
+        default fill = yellow
+    User specifies feature color (sum over local group by default)
+        FeatureFillRed
+        FeatureFillRedFromSum
+        FeatureFillRedFromMean
+        FeatureFillRedFromMedian
+        FeatureFillRedFromMode
+        Do not draw if local group value is blank
