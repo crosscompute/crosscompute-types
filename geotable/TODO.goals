@@ -1,15 +1,19 @@
-User specifies Longitude, Latitude or Lon, Lat
+User specifies Longitude, Latitude or Lon, Lat in any order and in any case
+
     User specifies nothing else
         default shape = circle
         default radius = 10 meters
         default stroke = black
         default fill = yellow
+
     User specifies marker shape
         MarkerShape
             Circle
             Triangle
             Square
+
         Do not draw if local group value is blank
+
     User specifies marker radius (sum over local group by default)
         MarkerRadius
             Assume that radius units are in meters
@@ -35,6 +39,7 @@ User specifies Longitude, Latitude or Lon, Lat
         MarkerSquareRadius
 
         Do not draw if local group value is blank
+
     User specifies marker fill color
         MarkerFillColor
             Yellow (Y default)
@@ -61,16 +66,24 @@ User specifies Longitude, Latitude or Lon, Lat
         MarkerFillGreen
 
         Do not draw if local group value is blank
+
     User specifies multiple attributes
         MarkerCircleStrokeBlackFillRedFromMean
-User specifies WKT
+
+User specifies WKT in any case
+
     User specifies nothing else
         default stroke = black
         default fill = yellow
-    User specifies feature color (sum over local group by default)
+
+    User specifies fill color (sum over local group by default)
+        FeatureFillColor
+        FeatureFillValue
+
         FeatureFillRed
         FeatureFillRedFromSum
         FeatureFillRedFromMean
         FeatureFillRedFromMedian
         FeatureFillRedFromMode
+
         Do not draw if local group value is blank
