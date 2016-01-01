@@ -1,6 +1,24 @@
+{% macro head_style_loaded() %}
+<link rel="stylesheet" href="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css">
+{% endmacro %}
+
+{% macro head_style_inline() %}
+.geotable-map {height: 300px}
+{% endmacro %}
+
+{% macro body_script_loaded() %}
+<script src="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+{% endmacro %}
+
+{% macro body_script_inline() %}
+{% endmacro %}
+
+{% macro render_query(key) %}
+{% endmacro %}
+
 {% macro render_value(key, value_by_key) %}
 <h3>{{ key }}</h3>
-<div id="{{ key }}_" class="map"></div>
+<div id="{{ key }}_" class="geotable-map"></div>
 <script>
 setTimeout(function() {
   var map = L.map('{{ key }}_');
@@ -24,7 +42,7 @@ setTimeout(function() {
       fillColor: getColor({{ 100 * d['weight'] }}),
       fillOpacity: 0.7
     }).on('click', function() {
-      $('#{{ key }}__').html("<table class=table><tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>{% for index, row in table.fillna('').iterrows() %}<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>{% endfor %}</table>");
+      $('#{{ key }}__').html('<table class="table"><tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>{% for index, row in table.fillna(\'\').iterrows() %}<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>{% endfor %}</table>');
     }));
   {% endfor %}
   var group = L.featureGroup(markers).addTo(map);

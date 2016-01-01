@@ -1,43 +1,45 @@
 import msgpack
 import simplejson as json
 from crosscompute.types import DataType
-from os.path import splitext
 
 
 class IntegerType(DataType):
     template = 'crosscompute_integer:type.jinja2'
-    file_formats = ['msg', 'json', 'txt']
+    formats = 'msg', 'json', 'txt'
 
-    def save(self, path, integer):
-        extension = splitext(path)[1]
-        if '.msg' == extension:
+    @classmethod
+    def save(Class, path, integer):
+        if path.endswith('.msg'):
             msgpack.pack(integer, open(path, 'wb'))
-        elif '.json' == extension:
+        elif path.endswith('.json'):
             json.dump(integer, open(path, 'wt'))
         else:
             open(path, 'wt').write(str(integer))
 
-    def load(self, path):
-        extension = splitext(path)[1]
-        if '.msg' == extension:
+    @classmethod
+    def load(Class, path):
+        if path.endswith('.msg'):
             integer = msgpack.unpack(open(path, 'rb'))
-        elif '.json' == extension:
+        elif path.endswith('.json'):
             integer = json.load(open(path, 'rt'))
         else:
-            integer = self.parse(open(path, 'rt').read())
+            integer = Class.parse(open(path, 'rt').read())
         return integer
 
-    def parse(self, text):
+    @classmethod
+    def parse(Class, text):
         try:
             integer = int(text)
         except (TypeError, ValueError):
             raise TypeError('expected_integer')
         return integer
 
-    def format(self, integer):
+    @classmethod
+    def format(Class, integer):
         return '%d' % integer
 
-    def match(self, integer):
+    @classmethod
+    def match(Class, integer):
         try:
             int(integer)
         except (TypeError, ValueError):

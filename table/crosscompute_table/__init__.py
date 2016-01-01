@@ -4,49 +4,51 @@ except ImportError:
     from . import _pandas as pandas
 from crosscompute.types import DataType
 from io import StringIO
-from os.path import splitext
 
 
 class TableType(DataType):
     template = 'crosscompute_table:type.jinja2'
-    file_formats = ['msg', 'json', 'csv', 'xls', 'xlsx']
+    formats = 'msg', 'json', 'csv', 'xls', 'xlsx'
 
-    def save(self, path, table):
-        extension = splitext(path)[1]
-        if '.msg' == extension:
+    @classmethod
+    def save(Class, path, table):
+        if path.endswith('.msg'):
             table.to_msgpack(path, compress='blosc')
-        elif '.json' == extension:
+        elif path.endswith('.json'):
             table.to_json(path)
-        elif '.csv' == extension:
+        elif path.endswith('.csv'):
             table.to_csv(path, index=False)
-        elif extension in ('.xls', '.xlsx'):
+        elif path.endswith('.xls') or path.endswith('.xlsx'):
             table.to_excel(path)
         else:
             raise TypeError('unsupported_format')
 
-    def load(self, path):
-        extension = splitext(path)[1]
-        if '.msg' == extension:
+    @classmethod
+    def load(Class, path):
+        if path.endswith('.msg'):
             table = pandas.read_msgpack(path)
-        elif '.json' == extension:
+        elif path.endswith('.json'):
             table = pandas.read_json(path)
-        elif '.csv' == extension:
+        elif path.endswith('.csv'):
             table = pandas.read_csv(path, skipinitialspace=True)
-        elif extension in ('.xls', '.xlsx'):
+        elif path.endswith('.xls') or path.endswith('.xlsx'):
             table = pandas.read_excel(path)
         else:
             raise TypeError('unsupported_format')
         return table
 
-    def parse(self, text):
+    @classmethod
+    def parse(Class, text):
         try:
             table = pandas.read_csv(StringIO(text), skipinitialspace=True)
         except (TypeError, ValueError):
             raise TypeError('expected_table')
         return table
 
-    def format(self, table):
+    @classmethod
+    def format(Class, table):
         return table.to_csv(index=False)
 
-    def match(self, table):
+    @classmethod
+    def match(Class, table):
         return hasattr(table, 'iterrows')

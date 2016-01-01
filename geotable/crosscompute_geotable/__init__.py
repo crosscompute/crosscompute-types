@@ -4,20 +4,19 @@ try:
 except ImportError:
     from . import _pandas as pandas
 from crosscompute.types import DataType
-from os.path import splitext
 
 
 class GeotableType(DataType):
     template = 'crosscompute_geotable:type.jinja2'
-    file_formats = ['msg', 'json', 'csv']  # TODO: Add shp.zip
+    formats = 'msg', 'json', 'csv'  # TODO: Add shp.zip
 
-    def load(self, path):
-        extension = splitext(path)[1]
-        if '.msg' == extension:
+    @classmethod
+    def load(Class, path):
+        if path.endswith('.msg'):
             table = pandas.read_msgpack(path)
-        elif '.json' == extension:
+        elif path.endswith('.json'):
             table = pandas.read_json(path)
-        elif '.csv' == extension:
+        elif path.endswith('.csv'):
             table = pandas.read_csv(path)
         else:
             raise TypeError('unsupported_format')
