@@ -42,7 +42,7 @@ setTimeout(function() {
       fillColor: getColor({{ 100 * d['weight'] }}),
       fillOpacity: 0.7
     }).on('click', function() {
-      $('#{{ key }}__').html('<table class="table"><tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>{% for index, row in table.fillna(\'\').iterrows() %}<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>{% endfor %}</table>');
+      $('#{{ key }}__').html('<table class="table"><tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>{% for index, row in table.fillna('').iterrows() %}<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>{% endfor %}</table>');
     }));
   {% endfor %}
   var group = L.featureGroup(markers).addTo(map);
