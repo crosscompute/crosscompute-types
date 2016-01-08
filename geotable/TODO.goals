@@ -1,3 +1,14 @@
+= Implement skeleton
+    = Move map initialization to loop in body_script_inline
+        = Define array to hold map ids in head_script_inline
+        Push map ids in render_value
+        Push marker values for each map id
+    Implement Radius
+        Summarize radius in python
+    Implement FillColor
+        Scale to number of colors in palette
+        Determine fill_color in python
+
 Take API key from environment
 
 Support different naming conventions
@@ -5,12 +16,13 @@ Support different naming conventions
     fill_color
     fill-color
 
+User specifies Address
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies nothing else
         default shape = circle
         default radius in meters = 10
         default stroke = black
-        default stroke weight in pixels = 5
+        default stroke weight in pixels = 3
         default fill color = yellow
 
     User specifies shape
@@ -24,7 +36,7 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies radius (sum over local group by default)
         Radius
             Assume that radius units are in meters
-        RadiusFromSum
+        = RadiusFromSum
         RadiusFromMean
         RadiusFromMedian
         RadiusFromMode
@@ -48,7 +60,8 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         Do not draw if local group value is blank
 
     User specifies fill color
-        FillColor (default is yellow from mean)
+
+        FillColor
             Yellow (Y)
             Black (K)
             Red (R)
@@ -56,8 +69,15 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
             Blue (B)
             Cyan (C)
             Magenta (M)
+            [hex]
         FillColorFromMean
         FillColorFromMode
+
+        FillColorScheme (default is Reds)
+            Reds
+            BuGn
+            PuRd
+        FillColorSchemeFromMode
 
         FillColorValue (default is sum)
         FillColorValueFromSum
@@ -65,24 +85,27 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         FillColorValueFromMode
         FillColorValueFromMedian
 
-        FillRed (default is sum)
-        FillRedFromSum
-        FillRedFromMean
-        FillRedFromMode
-        FillRedFromMedian
+        FillReds
+        FillBuGn
 
-        FillBlue
-        FillGreen
+        FillReds (default is sum)
+        = FillRedsFromSum
+        FillRedsFromMean
+        FillRedsFromMode
+        FillRedsFromMedian
+
+        FillBlues
+        FillGreens
 
         Do not draw if local group value is blank
 
     User specifies multiple attributes
-        SquareStrokeWhiteFillRedFromMean
+        SquareStrokeWhiteFillRedsFromMean
 
 User specifies WKT in any case
     User specifies nothing else
         default stroke = black
-        default stroke weight in pixels = 5
+        default stroke weight in pixels = 3
         default fill = yellow
 
     User specifies fill color (sum over local group by default)
@@ -92,11 +115,11 @@ User specifies WKT in any case
             Allow word
         FillColorValue
 
-        FillRed
-        FillRedFromSum
-        FillRedFromMean
-        FillRedFromMedian
-        FillRedFromMode
+        FillReds
+        FillRedsFromSum
+        FillRedsFromMean
+        FillRedsFromMedian
+        FillRedsFromMode
 
         Do not draw if local group value is blank
 
