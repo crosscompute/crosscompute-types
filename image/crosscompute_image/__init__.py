@@ -2,8 +2,8 @@ from crosscompute.types import DataType
 
 
 class ImageType(DataType):
-    template = 'crosscompute_image:type.jinja2'
     formats = 'jpg', 'png', 'gif'
+    template = 'crosscompute_image:type.jinja2'
 
     @classmethod
     def load(Class, path):

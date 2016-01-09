@@ -4,11 +4,20 @@ try:
 except ImportError:
     from . import _pandas as pandas
 from crosscompute.types import DataType
+from os import environ
+
+
+MAPBOX_TOKEN = environ.get(
+    'MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6IjZjNmRjNzk3ZmE2MTcwOTEwMGY0MzU3YjUzOWFmNWZhIn0.Y8bhBaUMqFiPrDRW9hieoQ')  # noqa
 
 
 class GeotableType(DataType):
-    template = 'crosscompute_geotable:type.jinja2'
     formats = 'msg', 'json', 'csv'  # TODO: Add shp.zip
+    template = 'crosscompute_geotable:type.jinja2'
+
+    @classmethod
+    def get_template_variables(Class):
+        return {'mapbox_token': MAPBOX_TOKEN}
 
     @classmethod
     def load(Class, path):

@@ -4,8 +4,8 @@ from crosscompute.types import DataType
 
 
 class IntegerType(DataType):
-    template = 'crosscompute_integer:type.jinja2'
     formats = 'msg', 'json', 'txt'
+    template = 'crosscompute_integer:type.jinja2'
 
     @classmethod
     def save(Class, path, integer):

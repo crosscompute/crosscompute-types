@@ -7,8 +7,8 @@ from io import StringIO
 
 
 class TableType(DataType):
-    template = 'crosscompute_table:type.jinja2'
     formats = 'msg', 'json', 'csv', 'xls', 'xlsx'
+    template = 'crosscompute_table:type.jinja2'
 
     @classmethod
     def save(Class, path, table):

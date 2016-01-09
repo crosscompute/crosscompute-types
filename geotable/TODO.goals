@@ -1,15 +1,17 @@
-= Implement skeleton
+= Get access token from environment
+
+Implement skeleton
     = Move map initialization to loop in body_script_inline
-        = Define array to hold map ids in head_script_inline
-        Push map ids in render_value
-        Push marker values for each map id
+        + Define array to hold map ids in head_script_inline
+        + Push map ids in render_value
+        = Push marker values for each map id
     Implement Radius
         Summarize radius in python
     Implement FillColor
         Scale to number of colors in palette
         Determine fill_color in python
 
-Take API key from environment
+Get map type from table name
 
 Support different naming conventions
     Fill Color
