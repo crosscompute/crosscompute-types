@@ -31,7 +31,7 @@ class IntegerType(DataType):
         try:
             integer = int(text)
         except (TypeError, ValueError):
-            raise TypeError('expected_integer')
+            raise TypeError('Integer expected (%s)' % text)
         return integer
 
     @classmethod

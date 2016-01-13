@@ -1,5 +1,5 @@
 {% macro head_style_loaded() %}
-<link rel="stylesheet" href="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css">
+<link rel="stylesheet" href="//api.mapbox.com/mapbox.js/v2.2.4/mapbox.css">
 {% endmacro %}
 
 {% macro head_style_inline() %}
@@ -7,61 +7,78 @@
 {% endmacro %}
 
 {% macro head_script_inline() %}
-var map_ids = [];
+var map_definitions = {};
 {% endmacro %}
 
 {% macro body_script_loaded() %}
-<script src="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<script src='//api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
 {% endmacro %}
 
 {% macro body_script_inline() %}
-for (var i = 0; i < map_ids.length; i++) {
-  var map = L.map(map_ids[i]);
-  // !!! Extract base layer id from environment
-  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={{ mapbox_token }}', {
-
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="http://mapbox.com">Mapbox</a>',
-
-  }).addTo(map);
+function get_tile_layer_id(key) {
+  try {
+    return /(streets|light|dark|satellite|streets-satellite|wheatpaste|streets-basic|comic|outdoors|run-bike-hike|pencil|pirates|emerald|high-contrast)_geotable/.exec(key)[1];
+  } catch(e) {
+    return 'streets';
+  }
 }
+L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q') }}';
+$.each(map_definitions, function(k, v) {
+  var map = L.mapbox.map(k + '_', 'mapbox.' + get_tile_layer_id(k)), xs = [];
+  var rows = v[0], properties = v[1];
+  for (var i = 0; i < rows.length; i++) {
+    var a = rows[i], geometry_type_id = a[0], geometry_coordinates = a[1], local_properties = a[2];
+    var x;
+
+    switch(geometry_type_id) {
+      case 1:
+        var radius = 10;
+        x = L.circle(geometry_coordinates, radius);
+        break
+      case 2:
+        // Polyline
+        break
+      case 3:
+        // Polygon
+        break
+      case 4:
+        break
+      case 5:
+        // MultiPolyline
+        break
+      case 6:
+        // MultiPolygon
+        break
+    }
+
+    xs.push(x);
+  }
+  map.fitBounds(L.featureGroup(xs).addTo(map).getBounds());
+});
 {% endmacro %}
 
 {% macro render_query(key) %}
 {% endmacro %}
 
-{% macro render_value(key, value_by_key) %}
+{% macro render_value(key, value) %}
+{% set items, properties = value %}
 <h3>{{ key }}</h3>
 <div id="{{ key }}_" class="geotable-map"></div>
+<div id="{{ key }}__">
+{% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
+<table id="{{ key }}__{{ loop.index }}" class="table">
+<tr>{% for column in local_table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
+{% for index, row in local_table.fillna('').iterrows() %}
+<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
+{% endfor %}
+</table>
+{% endfor %}
+</div>
 <script>
-map_ids.push('{{ key }}_');
-
-setTimeout(function() {
-  L.tileLayer(, {
-    id: 'mapbox.streets'
-  }).addTo(map);
-
-  function getColor(x) {
-    return x < 11 ? '#fff7ec': x < 22 ? '#fee8c8': x < 33 ? '#fdd49e': x < 44 ? '#fdbb84': x < 55 ? '#fc8d59': x < 66 ? '#ef6548': x < 77 ? '#d7301f': x < 88 ? '#b30000': '#7f0000';
-  }
-
-  var markers = [];
-  {% for (longitude, latitude), d in value_by_key.items() %}
-    {% set table = d['table'] %}
-    markers.push(L.circle([{{ latitude }}, {{ longitude }}], {{ d['radius'] }}, {
-      color: 'black',
-      opacity: 1,
-      fillColor: {{ d['fill_color'] }},
-      fillOpacity: 0.7
-    }).on('click', function() {
-      $('#{{ key }}__').html('<table class="table"><tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>{% for index, row in table.fillna('').iterrows() %}<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>{% endfor %}</table>');
-    }));
-  {% endfor %}
-  var group = L.featureGroup(markers).addTo(map);
-  map.fitBounds(group.getBounds());
-  map.on('click', function() {
-    $('#{{ key }}__').html('');
-  });
-}, 1500);
+map_definitions['{{ key }}'] = [[
+{% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
+[{{ geometry_type_id }}, {{ geometry_coordinates }}, {{ local_properties }}]
+{%- if not loop.last %},{% endif %}
+{% endfor %}], {{ properties }}];
 </script>
-<div id="{{ key }}__"></div>
-{% endmacro %}
+{%- endmacro %}

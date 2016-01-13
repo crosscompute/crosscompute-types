@@ -1,17 +1,15 @@
-= Get access token from environment
+= Define default stroke color
+Define default fill color
 
-Implement skeleton
-    = Move map initialization to loop in body_script_inline
-        + Define array to hold map ids in head_script_inline
-        + Push map ids in render_value
-        = Push marker values for each map id
-    Implement Radius
-        Summarize radius in python
-    Implement FillColor
-        Scale to number of colors in palette
-        Determine fill_color in python
+Standardize column widths if possible
+Show local table when user clicks on feature
 
-Get map type from table name
+Implement RadiusRange
+Implement FillReds
+
++ Get access token from environment
++ Get map type from table name
++ Move map initialization to loop in body_script_inline
 
 Support different naming conventions
     Fill Color
