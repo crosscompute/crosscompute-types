@@ -24,36 +24,34 @@ function get_tile_layer_id(key) {
 }
 L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q') }}';
 $.each(map_definitions, function(k, v) {
-  var map = L.mapbox.map(k + '_', 'mapbox.' + get_tile_layer_id(k)), xs = [];
+  var map = L.mapbox.map(k + '_', 'mapbox.' + get_tile_layer_id(k)), features = [];
   var rows = v[0], properties = v[1];
   for (var i = 0; i < rows.length; i++) {
-    var a = rows[i], geometry_type_id = a[0], geometry_coordinates = a[1], local_properties = a[2];
-    var x;
+    var row = rows[i], geometry_type_id = row[0], geometry_coordinates = row[1], local_properties = $.extend({'color': 'black', 'weight': 3, 'opacity': 0.75, 'fillOpacity': 0.5}, properties, row[2]), feature;
 
     switch(geometry_type_id) {
       case 1:
-        var radius = 10;
-        x = L.circle(geometry_coordinates, radius);
-        break
+        feature = L.circle(geometry_coordinates, local_properties['radius'] || 10, local_properties);
+        break;
       case 2:
         // Polyline
-        break
+        break;
       case 3:
         // Polygon
-        break
+        break;
       case 4:
-        break
+        break;
       case 5:
         // MultiPolyline
-        break
+        break;
       case 6:
         // MultiPolygon
-        break
+        break;
     }
 
-    xs.push(x);
+    features.push(feature);
   }
-  map.fitBounds(L.featureGroup(xs).addTo(map).getBounds());
+  map.fitBounds(L.featureGroup(features).addTo(map).getBounds());
 });
 {% endmacro %}
 
@@ -61,19 +59,19 @@ $.each(map_definitions, function(k, v) {
 {% endmacro %}
 
 {% macro render_value(key, value) %}
-{% set items, properties = value %}
+{% set items, properties, columns = value %}
 <h3>{{ key }}</h3>
 <div id="{{ key }}_" class="geotable-map"></div>
-<div id="{{ key }}__">
+<table id="{{ key }}__" class="table">
+<thead><tr>{% for column in columns %}<th>{{ column }}</th>{% endfor %}</tr></thead>
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
-<table id="{{ key }}__{{ loop.index }}" class="table">
-<tr>{% for column in local_table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
-{% for index, row in local_table.fillna('').iterrows() %}
+<tbody id="{{ key }}__{{ loop.index }}">
+{%- for index, row in local_table.fillna('').iterrows() -%}
 <tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
+{%- endfor -%}
+</tbody>
 {% endfor %}
 </table>
-{% endfor %}
-</div>
 <script>
 map_definitions['{{ key }}'] = [[
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}

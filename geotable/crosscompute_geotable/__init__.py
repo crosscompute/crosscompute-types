@@ -90,7 +90,7 @@ class GeotableType(DataType):
             items.append((
                 geometry_type_id, geometry_coordinates, local_properties,
                 local_table))
-        return items, properties
+        return items, properties, table.columns
 
 
 def get_geometry_columns(columns):

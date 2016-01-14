@@ -1,22 +1,18 @@
-= Define default stroke color
-Define default fill color
-
-Standardize column widths if possible
-Show local table when user clicks on feature
-
+Show local table only when user clicks on feature
 Implement RadiusRange
 Implement FillReds
-
-+ Get access token from environment
-+ Get map type from table name
-+ Move map initialization to loop in body_script_inline
-
 Support different naming conventions
     Fill Color
     fill_color
     fill-color
 
-User specifies Address
++ Get access token from environment
++ Get map type from table name
++ Move map initialization to loop in body_script_inline
++ Define default stroke color
++ Define default fill color
++ Standardize column widths if possible
+
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies nothing else
         default shape = circle
@@ -142,3 +138,5 @@ User specifies WKT in any case
 
         StrokeSolidColor
         StrokeDashedColor
+
+User specifies Address
