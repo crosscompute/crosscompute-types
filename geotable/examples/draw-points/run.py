@@ -1,1 +1,1 @@
-print('x_geotable_path = point.csv')
+print('point_geotable_path = point.csv')

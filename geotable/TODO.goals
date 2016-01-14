@@ -1,4 +1,3 @@
-Show local table only when user clicks on feature
 Implement RadiusRange
 Implement FillReds
 Support different naming conventions
@@ -11,7 +10,8 @@ Support different naming conventions
 + Move map initialization to loop in body_script_inline
 + Define default stroke color
 + Define default fill color
-+ Standardize column widths if possible
++ Show local table only when user clicks on feature
+_ Standardize column widths if possible
 
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies nothing else
