@@ -32,27 +32,30 @@ $.each(map_definitions, function(k, v) {
 
     switch(geometry_type_id) {
       case 1:
-        if (d['radius']) {
-          feature = L.circle(geometry_coordinates, d['radius'], d);
+        if (d['radius_in_meters']) {
+          feature = L.circle(geometry_coordinates, d['radius_in_meters'], d);
         } else {
           feature = L.circleMarker(geometry_coordinates, d);
+          d['radius_in_pixels'] && feature.setRadius(d['radius_in_pixels']);
         }
         break;
       case 2:
-        // Polyline
+        feature = L.polyline(geometry_coordinates, d);
         break;
       case 3:
-        // Polygon
+        feature = L.polygon(geometry_coordinates, d);
         break;
       case 4:
+        // MultiPoint
         break;
       case 5:
-        // MultiPolyline
+        feature = L.multiPolyline(geometry_coordinates, d);
         break;
       case 6:
-        // MultiPolygon
+        feature = L.multiPolygon(geometry_coordinates, d);
         break;
     }
+
     feature.geotable = {'table_id': table_id, 'tbody_id': table_id + i};
     feature.on('click', function() {
       var a = this.geotable;

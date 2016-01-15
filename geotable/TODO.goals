@@ -1,4 +1,6 @@
-Implement RadiusRange
+Implement RadiusInMetersRange10-100
+Implement RadiusInPixelsRange
+
 Implement FillReds
 Support different naming conventions
     Fill Color
