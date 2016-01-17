@@ -1,5 +1,6 @@
 import msgpack
 import simplejson as json
+from crosscompute.exceptions import DataTypeError
 from crosscompute.types import DataType
 
 
@@ -31,7 +32,7 @@ class IntegerType(DataType):
         try:
             integer = int(text)
         except (TypeError, ValueError):
-            raise TypeError('Integer expected (%s)' % text)
+            raise DataTypeError('Integer expected (%s)' % text)
         return integer
 
     @classmethod

@@ -1,18 +1,13 @@
-Implement RadiusInMetersRange10-100
-Implement RadiusInPixelsRange
-
-Implement FillReds
-Support different naming conventions
-    Fill Color
-    fill_color
-    fill-color
-
 + Get access token from environment
 + Get map type from table name
 + Move map initialization to loop in body_script_inline
 + Define default stroke color
 + Define default fill color
 + Show local table only when user clicks on feature
++ Support different naming conventions (Fill Color, fill_color, fill-color)
++ Implement RadiusInPixelsRange10-100
++ Implement RadiusInMetersRange
++ Implement FillReds
 _ Standardize column widths if possible
 
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
@@ -36,15 +31,13 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
             Assume that radius units are in meters
         = RadiusFromSum
         RadiusFromMean
-        RadiusFromMedian
-        RadiusFromMode
+        RadiusFromCount
 
         RadiusRange10-100
             Normalize to 10-100 meter range
         RadiusRange10-100FromSum
         RadiusRange10-100FromMean
-        RadiusRange10-100FromMedian
-        RadiusRange10-100FromMode
+        RadiusRange10-100FromCount
 
         RadiusInFeet
         RadiusInMiles
@@ -60,16 +53,8 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies fill color
 
         FillColor
-            Yellow (Y)
-            Black (K)
-            Red (R)
-            Green (G)
-            Blue (B)
-            Cyan (C)
-            Magenta (M)
-            [hex]
-        FillColorFromMean
         FillColorFromMode
+        FillColorFromMean
 
         FillColorScheme (default is Reds)
             Reds

@@ -1,3 +1,4 @@
+from crosscompute.exceptions import DataTypeError
 from crosscompute.types import DataType
 from io import StringIO
 try:
@@ -21,7 +22,7 @@ class TableType(DataType):
         elif path.endswith('.xls') or path.endswith('.xlsx'):
             table.to_excel(path)
         else:
-            raise TypeError('File format not supported (%s)' % path)
+            raise DataTypeError('File format not supported (%s)' % path)
 
     @classmethod
     def load(Class, path):
@@ -34,7 +35,7 @@ class TableType(DataType):
         elif path.endswith('.xls') or path.endswith('.xlsx'):
             table = pandas.read_excel(path)
         else:
-            raise TypeError('unsupported_format')
+            raise DataTypeError('unsupported_format')
         return table
 
     @classmethod

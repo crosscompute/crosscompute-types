@@ -23,7 +23,7 @@ function get_tile_layer_id(key) {
     return 'streets';
   }
 }
-L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q') }}';
+L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpamVuY3cxbzAwMG12ZGx4cGljbGtqMGUifQ.vpDqms08MBqoRgp667Yz5Q') }}';
 $.each(map_definitions, function(k, v) {
   var map_id = k + '_', table_id = k + '__';
   var map = L.mapbox.map(map_id, 'mapbox.' + get_tile_layer_id(k)), features = [], feature_packs = v[0], properties = v[1];
@@ -32,11 +32,11 @@ $.each(map_definitions, function(k, v) {
 
     switch(geometry_type_id) {
       case 1:
-        if (d['radius_in_meters']) {
-          feature = L.circle(geometry_coordinates, d['radius_in_meters'], d);
+        if (d.radius_in_meters) {
+          feature = L.circle(geometry_coordinates, d.radius_in_meters, d);
         } else {
           feature = L.circleMarker(geometry_coordinates, d);
-          d['radius_in_pixels'] && feature.setRadius(d['radius_in_pixels']);
+          d.radius_in_pixels && feature.setRadius(d.radius_in_pixels);
         }
         break;
       case 2:
@@ -75,15 +75,15 @@ $.each(map_definitions, function(k, v) {
 {% endmacro %}
 
 {% macro render_value(key, value) %}
-{% set items, properties, columns = value %}
+{% set items, properties, column_names = value %}
 <h3>{{ key }}</h3>
 <div id="{{ key }}_" class="geotable-map"></div>
 <table id="{{ key }}__" class="table geotable-table">
-<thead><tr>{% for column in columns %}<th>{{ column }}</th>{% endfor %}</tr></thead>
+<thead><tr>{% for column_name in column_names %}<th>{{ column_name }}</th>{% endfor %}</tr></thead>
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
 <tbody id="{{ key }}__{{ loop.index0 }}">
 {%- for index, row in local_table.fillna('').iterrows() -%}
-<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
+<tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
 {%- endfor -%}
 </tbody>
 {% endfor %}
@@ -91,7 +91,12 @@ $.each(map_definitions, function(k, v) {
 <script>
 map_definitions['{{ key }}'] = [[
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
-[{{ geometry_type_id }}, {{ geometry_coordinates }}, {{ local_properties }}]
+[{{ geometry_type_id }}, {{ geometry_coordinates }}, {
+{%- for k, v in local_properties.items() %}
+'{{ k }}': '{{ v }}'
+{%- if not loop.last %},{% endif %}
+{% endfor -%}
+}]
 {%- if not loop.last %},{% endif %}
 {% endfor %}], {{ properties }}];
 </script>
