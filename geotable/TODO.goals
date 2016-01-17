@@ -1,10 +1,11 @@
-User specifies Longitude, Latitude or Lon, Lat in any order and in any case
-    User specifies nothing else
-        + default shape = circle
-        + default stroke = black
-        + default stroke weight in pixels = 3
-        + default fill color = yellow
+Draft example with WKT LineString
+Implement FillColorScheme
+Implement FillColorValue
 
+StrokeType (S/D)
+StrokeDashArray
+
+User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies shape
         Shape
             Circle
@@ -20,11 +21,6 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         RadiusFromMean
         RadiusFromCount
 
-        + RadiusRange10-100 (Normalize to 10-100 meter range)
-        + RadiusRange10-100FromSum
-        + RadiusRange10-100FromMean
-        + RadiusRange10-100FromCount
-
         RadiusInFeet
         RadiusInMiles
         RadiusInMeters
@@ -37,27 +33,13 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         Do not draw if local group value is blank
 
     User specifies fill color
-
-        + FillColor
-        + FillColorFromSum
-        + FillColorFromMean
-        + FillColorFromCount
-
-        FillColorScheme (default is Reds)
+        FillColorScheme so that different points can have different color schemes (default is Reds)
         FillColorSchemeFromMode
 
         FillColorValue (default is sum)
         FillColorValueFromSum
         FillColorValueFromMean
-        FillColorValueFromMode
-        FillColorValueFromMedian
-
-        + FillReds
-        + FillBuGn
-        + FillReds (default is sum)
-        + FillRedsFromSum
-        + FillRedsFromMean
-        + FillRedsFromCount
+        FillColorValueFromCount
 
         Do not draw if local group value is blank
 
@@ -66,22 +48,9 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
 
 User specifies WKT in any case
     User specifies nothing else
-        + default stroke = black
-        + default stroke weight in pixels = 3
-        + default fill = yellow
-
     User specifies fill color (sum over local group by default)
-        FillColor
-            + Allow hex value
-            + Allow single letter abbreviation
-            + Allow word
+        FillColorScheme
         FillColorValue
-
-        + FillReds
-        + FillRedsFromSum
-        + FillRedsFromMean
-        + FillRedsFromCount
-
         Do not draw if local group value is blank
 
     User specifies geometry-specific styles
