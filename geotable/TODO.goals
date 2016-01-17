@@ -1,22 +1,9 @@
-+ Get access token from environment
-+ Get map type from table name
-+ Move map initialization to loop in body_script_inline
-+ Define default stroke color
-+ Define default fill color
-+ Show local table only when user clicks on feature
-+ Support different naming conventions (Fill Color, fill_color, fill-color)
-+ Implement RadiusInPixelsRange10-100
-+ Implement RadiusInMetersRange
-+ Implement FillReds
-_ Standardize column widths if possible
-
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies nothing else
-        default shape = circle
-        default radius in meters = 10
-        default stroke = black
-        default stroke weight in pixels = 3
-        default fill color = yellow
+        + default shape = circle
+        + default stroke = black
+        + default stroke weight in pixels = 3
+        + default fill color = yellow
 
     User specifies shape
         Shape
@@ -33,11 +20,10 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         RadiusFromMean
         RadiusFromCount
 
-        RadiusRange10-100
-            Normalize to 10-100 meter range
-        RadiusRange10-100FromSum
-        RadiusRange10-100FromMean
-        RadiusRange10-100FromCount
+        + RadiusRange10-100 (Normalize to 10-100 meter range)
+        + RadiusRange10-100FromSum
+        + RadiusRange10-100FromMean
+        + RadiusRange10-100FromCount
 
         RadiusInFeet
         RadiusInMiles
@@ -52,14 +38,12 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
 
     User specifies fill color
 
-        FillColor
-        FillColorFromMode
-        FillColorFromMean
+        + FillColor
+        + FillColorFromSum
+        + FillColorFromMean
+        + FillColorFromCount
 
         FillColorScheme (default is Reds)
-            Reds
-            BuGn
-            PuRd
         FillColorSchemeFromMode
 
         FillColorValue (default is sum)
@@ -68,17 +52,12 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         FillColorValueFromMode
         FillColorValueFromMedian
 
-        FillReds
-        FillBuGn
-
-        FillReds (default is sum)
-        = FillRedsFromSum
-        FillRedsFromMean
-        FillRedsFromMode
-        FillRedsFromMedian
-
-        FillBlues
-        FillGreens
+        + FillReds
+        + FillBuGn
+        + FillReds (default is sum)
+        + FillRedsFromSum
+        + FillRedsFromMean
+        + FillRedsFromCount
 
         Do not draw if local group value is blank
 
@@ -87,22 +66,21 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
 
 User specifies WKT in any case
     User specifies nothing else
-        default stroke = black
-        default stroke weight in pixels = 3
-        default fill = yellow
+        + default stroke = black
+        + default stroke weight in pixels = 3
+        + default fill = yellow
 
     User specifies fill color (sum over local group by default)
         FillColor
-            Allow hex value
-            Allow single letter abbreviation
-            Allow word
+            + Allow hex value
+            + Allow single letter abbreviation
+            + Allow word
         FillColorValue
 
-        FillReds
-        FillRedsFromSum
-        FillRedsFromMean
-        FillRedsFromMedian
-        FillRedsFromMode
+        + FillReds
+        + FillRedsFromSum
+        + FillRedsFromMean
+        + FillRedsFromCount
 
         Do not draw if local group value is blank
 
