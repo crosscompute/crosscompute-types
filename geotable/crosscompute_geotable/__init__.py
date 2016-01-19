@@ -23,12 +23,6 @@ GEOMETRY_TYPE_ID_BY_TYPE = {
     'MultiLineString': 5,
     'MultiPolygon': 6,
 }
-SUMMARY_TYPE_EXPRESSION = r'(?: from (count|mean|sum))?'
-FILL_COLOR_COLUMN_PATTERN = re.compile(
-    r'fill (color|reds)' + SUMMARY_TYPE_EXPRESSION)
-RADIUS_COLUMN_PATTERN = re.compile(
-    r'radius in (pixels|meters)'
-    r'(?: (range) (\d+) (\d+))?' + SUMMARY_TYPE_EXPRESSION)
 HEX_ARRAY_BY_COLOR_SCHEME = {
     'bugn': [
         '#f7fcfd', '#e5f5f9', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76',
@@ -124,6 +118,12 @@ HEX_ARRAY_BY_COLOR_SCHEME = {
         '#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462',
         '#b3de69', '#fccde5', '#d9d9d9'],
 }  # http://colorbrewer2.org
+SUMMARY_TYPE_EXPRESSION = r'(?: from (count|mean|sum))?'
+FILL_COLOR_COLUMN_PATTERN = re.compile(r'fill (color|%s)' % '|'.join(
+    HEX_ARRAY_BY_COLOR_SCHEME) + SUMMARY_TYPE_EXPRESSION)
+RADIUS_COLUMN_PATTERN = re.compile(
+    r'radius in (pixels|meters)'
+    r'(?: (range) (\d+) (\d+))?' + SUMMARY_TYPE_EXPRESSION)
 
 
 class GeotableType(DataType):
@@ -142,6 +142,9 @@ class GeotableType(DataType):
             raise DataTypeError('File format not supported (%s)' % path)
         items, properties = [], {}
         geometry_column_names = get_geometry_column_names(table.columns)
+        if not geometry_column_names:
+            raise DataTypeError(
+                'Geometry columns missing (%s)' % ', '.join(table.columns))
         if len(geometry_column_names) > 1:
             get_geometry_properties = lambda x: (1, list(x))  # Assume points
         else:

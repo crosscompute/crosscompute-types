@@ -28,7 +28,7 @@ $.each(map_definitions, function(k, v) {
   var map_id = k + '_', table_id = k + '__';
   var map = L.mapbox.map(map_id, 'mapbox.' + get_tile_layer_id(k)), features = [], feature_packs = v[0], properties = v[1];
   for (var i = 0; i < feature_packs.length; i++) {
-    var p = feature_packs[i], geometry_type_id = p[0], geometry_coordinates = p[1], d = $.extend({'color': 'black', 'weight': 3, 'opacity': 0.7, 'fillColor': 'yellow', 'fillOpacity': 0.5}, properties, p[2]), feature;
+    var p = feature_packs[i], geometry_type_id = p[0], geometry_coordinates = p[1], d = $.extend({'color': 'black', 'weight': 2, 'opacity': 0.7, 'fillColor': 'yellow', 'fillOpacity': 0.5}, properties, p[2]), feature;
 
     switch(geometry_type_id) {
       case 1:
