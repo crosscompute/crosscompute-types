@@ -6,6 +6,7 @@ from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
 from matplotlib.colors import colorConverter, rgb2hex
+from os.path import basename
 try:
     import pandas
 except ImportError:
@@ -139,7 +140,8 @@ class GeotableType(DataType):
         elif path.endswith('.csv'):
             table = pandas.read_csv(path)
         else:
-            raise DataTypeError('File format not supported (%s)' % path)
+            raise DataTypeError(
+                'File format not supported (%s)' % basename(path))
         items, properties = [], {}
         geometry_column_names = get_geometry_column_names(table.columns)
         if not geometry_column_names:

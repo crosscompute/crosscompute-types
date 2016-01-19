@@ -5,6 +5,7 @@ try:
     import pandas
 except ImportError:
     from . import _pandas as pandas
+from os.path import basename
 
 
 class TableType(DataType):
@@ -22,7 +23,8 @@ class TableType(DataType):
         elif path.endswith('.xls') or path.endswith('.xlsx'):
             table.to_excel(path)
         else:
-            raise DataTypeError('File format not supported (%s)' % path)
+            raise DataTypeError(
+                'File format not supported (%s)' % basename(path))
 
     @classmethod
     def load(Class, path):
@@ -35,7 +37,8 @@ class TableType(DataType):
         elif path.endswith('.xls') or path.endswith('.xlsx'):
             table = pandas.read_excel(path)
         else:
-            raise DataTypeError('unsupported_format')
+            raise DataTypeError(
+                'File format not supported (%s)' % basename(path))
         return table
 
     @classmethod
