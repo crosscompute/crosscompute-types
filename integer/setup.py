@@ -7,7 +7,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-integer',
-    version='0.3.0',
+    version='0.3.1',
     description='Integer data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -23,10 +23,16 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
+    setup_requires=[
+        'pytest-runner',
+    ],
     install_requires=[
-        'crosscompute',
+        'crosscompute>=0.4.0',
         'msgpack-python',
         'simplejson',
+    ],
+    tests_require=[
+        'pytest',
     ],
     entry_points={
         'crosscompute.types': [

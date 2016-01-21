@@ -7,7 +7,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-text',
-    version='0.3.0',
+    version='0.3.1',
     description='Text data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -24,7 +24,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute',
+        'crosscompute>=0.4.0',
     ],
     entry_points={
         'crosscompute.types': [

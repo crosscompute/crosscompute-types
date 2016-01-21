@@ -1,2 +1,2 @@
-include *.cfg *.ini *.rst
-recursive-include crosscompute_integer *.html *.css *.js *.jpg *.png *.gif *.ico *.jinja2
+include *.cfg *.rst
+recursive-include crosscompute_integer *.jinja2
