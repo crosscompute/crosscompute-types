@@ -16,9 +16,10 @@ var map_definitions = {};
 {% endmacro %}
 
 {% macro body_script_inline() %}
-function get_tile_layer_id(key) {
+function get_geotable_adjective(key) {
+  var adjective_string = 'streets|light|dark|satellite|streets-satellite|wheatpaste|streets-basic|comic|outdoors|run-bike-hike|pencil|pirates|emerald|high-contrast'.replace(/-/g, '[-_]');
   try {
-    return /(streets|light|dark|satellite|streets-satellite|wheatpaste|streets-basic|comic|outdoors|run-bike-hike|pencil|pirates|emerald|high-contrast)_geotable/.exec(key)[1];
+    return RegExp('(' + adjective_string + ')_geotable').exec(key)[1].replace(/_/g, '-');
   } catch(e) {
     return 'streets';
   }
@@ -26,7 +27,7 @@ function get_tile_layer_id(key) {
 L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpamVuY3cxbzAwMG12ZGx4cGljbGtqMGUifQ.vpDqms08MBqoRgp667Yz5Q') }}';
 $.each(map_definitions, function(k, v) {
   var map_id = k + '_', table_id = k + '__';
-  var map = L.mapbox.map(map_id, 'mapbox.' + get_tile_layer_id(k)), features = [], feature_packs = v[0], properties = v[1];
+  var map = L.mapbox.map(map_id, 'mapbox.' + get_geotable_adjective(k)), features = [], feature_packs = v[0], properties = v[1];
   for (var i = 0; i < feature_packs.length; i++) {
     var p = feature_packs[i], geometry_type_id = p[0], geometry_coordinates = p[1], d = $.extend({'color': 'black', 'weight': 2, 'opacity': 0.7, 'fillColor': 'yellow', 'fillOpacity': 0.5}, properties, p[2]), feature;
 

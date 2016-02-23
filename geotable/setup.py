@@ -4,10 +4,11 @@ from setuptools import find_packages, setup
 
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
+    'CHANGES.rst',
     'README.rst'])
 setup(
     name='crosscompute-geotable',
-    version='0.0.1',
+    version='0.0.2',
     description='Geotable data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[

@@ -119,7 +119,7 @@ HEX_ARRAY_BY_COLOR_SCHEME = {
         '#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462',
         '#b3de69', '#fccde5', '#d9d9d9'],
 }  # http://colorbrewer2.org
-SUMMARY_TYPE_EXPRESSION = r'(?: from (count|mean|sum))?'
+SUMMARY_TYPE_EXPRESSION = r'(?: from (mean|sum))?'
 FILL_COLOR_COLUMN_PATTERN = re.compile(r'fill (color|%s)' % '|'.join(
     HEX_ARRAY_BY_COLOR_SCHEME) + SUMMARY_TYPE_EXPRESSION)
 RADIUS_COLUMN_PATTERN = re.compile(
@@ -234,7 +234,15 @@ def _get_fill_color_transform(table, geometry_column_names):
         summarize = lambda series: getattr(series, summary_type)()
         normalize_number = define_normalize(_get_summary_domain(
             table, geometry_column_names, column_name, summarize), [0, 8.9999])
-        normalize = lambda x: hex_array[int(floor(normalize_number(x)))]
+
+        def normalize(x):
+            index_string = floor(normalize_number(x))
+            try:
+                index = int(index_string)
+            except ValueError:
+                index = 0
+            return hex_array[index]
+
     return _define_transform(
         column_name, local_property_name, normalize, summarize)
 
@@ -278,12 +286,12 @@ def _prepare_column_name(pattern, column_names):
 
 
 def _get_summary_domain(table, geometry_column_names, column_name, summarize):
-    x_min, x_max = np.inf, 0
+    x_min, x_max = np.inf, -np.inf
     for geometry_value, local_table in table.groupby(geometry_column_names):
         x = summarize(local_table[column_name])
         if x < x_min:
             x_min = x
-        elif x > x_max:
+        if x > x_max:
             x_max = x
     return x_min, x_max
 
