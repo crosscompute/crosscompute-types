@@ -181,7 +181,7 @@ def get_geometry_column_names(column_names):
     wkt_column_names = filter(is_wkt, column_names)
     if wkt_column_names:
         # Assume WKT coordinate order is (latitude, longitude)
-        return np.array(wkt_column_names[0]).tolist()
+        return [wkt_column_names[0]]
     latitude_column_names = filter(is_latitude, column_names)
     longitude_column_names = filter(is_longitude, column_names)
     if latitude_column_names and longitude_column_names:
@@ -213,7 +213,7 @@ def _get_geometry_properties_from_wkt(geometry_wkt):
         geometry_type_id = GEOMETRY_TYPE_ID_BY_TYPE[geometry.type]
     except KeyError:
         raise DataTypeError('Geometry type not supported (%s)' % geometry.type)
-    geometry_coordinates = mapping(geometry)['coordinates']
+    geometry_coordinates = _get_lists(mapping(geometry)['coordinates'])
     return geometry_type_id, geometry_coordinates
 
 
@@ -304,3 +304,8 @@ def _define_transform(column_name, local_property_name, normalize, summarize):
         return local_properties, local_table
 
     return transform
+
+
+def _get_lists(t):
+    'Convert tuples to lists, as seen in http://stackoverflow.com/a/1014669'
+    return list(map(_get_lists, t)) if isinstance(t, (list, tuple)) else t

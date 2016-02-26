@@ -1,9 +1,10 @@
-Draft example with WKT LineString
-Implement FillColorScheme
-Implement FillColorValue
++ Draft example with WKT LineString
 
 StrokeType (S/D)
 StrokeDashArray
+
+Implement FillColorScheme
+Implement FillColorValue
 
 User specifies Longitude, Latitude or Lon, Lat in any order and in any case
     User specifies shape
@@ -19,7 +20,6 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
             Assume that radius units are in meters
         = RadiusFromSum
         RadiusFromMean
-        RadiusFromCount
 
         RadiusInFeet
         RadiusInMiles
@@ -39,7 +39,6 @@ User specifies Longitude, Latitude or Lon, Lat in any order and in any case
         FillColorValue (default is sum)
         FillColorValueFromSum
         FillColorValueFromMean
-        FillColorValueFromCount
 
         Do not draw if local group value is blank
 
