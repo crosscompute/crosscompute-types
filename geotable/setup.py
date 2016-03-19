@@ -26,6 +26,9 @@ setup(
     zip_safe=False,
     install_requires=[
         'crosscompute>=0.4.0',
+        'matplotlib',
+        'numpy',
+        'shapely',
     ],
     entry_points={
         'crosscompute.types': [

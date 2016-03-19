@@ -1,4 +1,6 @@
-+ Draft example with WKT LineString
+See if we can remove heavy dependencies
+    Remove matplotlib dependency
+    Remove numpy dependency
 
 StrokeType (S/D)
 StrokeDashArray
