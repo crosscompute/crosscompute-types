@@ -10,11 +10,19 @@
 $('.editable-table').editableTableWidget();
 $('#tool-form').submit(function() {
   $('.editable-table').each(function() {
-    var $table = $(this), table_id = $table.attr('id');
-    var columns = [], indices = [], rows = [];
-
-
-    $('[name=' + table_id + 'json]').val('{"columns":' + JSON.stringify(columns) + ',"index":' + JSON.stringify(indices) + ',"data":' + JSON.stringify(rows) + '}';);
+    var $table = $(this), table_id = $table.attr('id'), columns = [], rows = [];
+    $(this).find('th').each(function() {
+      columns.push($(this).text());
+    });
+    var $rows = $('#timestamp_table_').find('tr');
+    for (var i = 1; i < $rows.length; i++) {
+      var $columns = $($rows[i]).find('td'), row = [];
+      for (var j = 0; j < $columns.length; j++) {
+        row.push($($columns[j]).text());
+      }
+      rows.push(row);
+    }
+    $('[name=' + table_id + 'json]').val('{"columns":' + JSON.stringify(columns) + ',"data":' + JSON.stringify(rows) + '}');
   });
 });
 {% endmacro %}
