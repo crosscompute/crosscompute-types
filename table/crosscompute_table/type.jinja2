@@ -1,17 +1,47 @@
 {% macro head_style_loaded() %}{% endmacro %}
 {% macro head_style_inline() %}{% endmacro %}
 {% macro head_script_inline() %}{% endmacro %}
-{% macro body_script_loaded() %}{% endmacro %}
-{% macro body_script_inline() %}{% endmacro %}
+
+{% macro body_script_loaded() %}
+<script src='/_/crosscompute/table/mindmup-editabletable.min.js'></script>
+{% endmacro %}
+
+{% macro body_script_inline() %}
+$('.editable-table').editableTableWidget();
+$('#tool-form').submit(function() {
+  $('.editable-table').each(function() {
+    var $table = $(this), table_id = $table.attr('id');
+    var columns = [], indices = [], rows = [];
+
+
+    $('[name=' + table_id + 'json]').val('{"columns":' + JSON.stringify(columns) + ',"index":' + JSON.stringify(indices) + ',"data":' + JSON.stringify(rows) + '}';);
+  });
+});
+{% endmacro %}
 
 {% macro render_query(key) %}
 <label for="{{ key }}_" class="control-label">{{ key }}</label>
-<textarea name="{{ key }}_csv" id="{{ key }}_" class="form-control" rows="10">{{ format_value(key).decode('utf-8') }}</textarea>
+{# <textarea name="{{ key }}_csv" id="{{ key }}_" class="form-control" rows="10">{{ format_value(key, 'csv').decode('utf-8') }}</textarea> #}
+
+{{ render_table(key, get_value(key), 'editable-table') }}
+<input name="{{ key }}_json" type="hidden">
+
+{# <input name="{{ key }}_json" type="hidden"> #}
+
+{# 
+<script>
+d.crosscompute.table.definitions['{{ key }}'] = {{ format_value(key, 'json').decode('utf-8') }};
+</script>
+#}
 {% endmacro %}
 
 {% macro render_value(key, table) %}
 <h3>{{ key }}</h3>
-<table id="{{ key }}_" class="table">
+{{ render_table(key, table) }}
+{% endmacro %}
+
+{% macro render_table(key, table, class='') %}
+<table id="{{ key + '_' }}" class="table {{ class }}">
   <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
 {% for index, row in table[:20].fillna('').iterrows() %}
   <tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>

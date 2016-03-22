@@ -11,6 +11,9 @@ from os.path import basename
 class TableType(DataType):
     formats = 'msg', 'json', 'csv', 'xls', 'xlsx'
     template = 'crosscompute_table:type.jinja2'
+    asset_paths = [
+        'mindmup-editabletable.min.js',
+    ]
 
     @classmethod
     def save(Class, path, table):
@@ -31,7 +34,7 @@ class TableType(DataType):
         if path.endswith('.msg'):
             table = pandas.read_msgpack(path)
         elif path.endswith('.json'):
-            table = pandas.read_json(path)
+            table = pandas.read_json(path, orient='split')
         elif path.endswith('.csv'):
             table = pandas.read_csv(path, skipinitialspace=True)
         elif path.endswith('.xls') or path.endswith('.xlsx'):
@@ -50,8 +53,11 @@ class TableType(DataType):
         return table
 
     @classmethod
-    def format(Class, table):
-        return table.to_csv(index=False)
+    def format(Class, table, format_name='csv'):
+        if format_name == 'csv':
+            return table.to_csv(index=False)
+        elif format_name == 'json':
+            return table.to_json(orient='split')
 
     @classmethod
     def match(Class, table):

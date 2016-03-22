@@ -8,7 +8,7 @@
 {% endmacro %}
 
 {% macro head_script_inline() %}
-var map_definitions = {};
+d.crosscompute.geotable.definitions = {};
 {% endmacro %}
 
 {% macro body_script_loaded() %}
@@ -25,7 +25,7 @@ function get_geotable_adjective(key) {
   }
 }
 L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpamVuY3cxbzAwMG12ZGx4cGljbGtqMGUifQ.vpDqms08MBqoRgp667Yz5Q') }}';
-$.each(map_definitions, function(k, v) {
+$.each(d.crosscompute.geotable.definitions, function(k, v) {
   var map_id = k + '_', table_id = k + '__';
   var map = L.mapbox.map(map_id, 'mapbox.' + get_geotable_adjective(k)), features = [], feature_packs = v[0], properties = v[1];
   for (var i = 0; i < feature_packs.length; i++) {
@@ -90,7 +90,7 @@ $.each(map_definitions, function(k, v) {
 {% endfor %}
 </table>
 <script>
-map_definitions['{{ key }}'] = [[
+d.crosscompute.geotable.definitions['{{ key }}'] = [[
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
 [{{ geometry_type_id }}, {{ geometry_coordinates }}, {
 {%- for k, v in local_properties.items() %}
