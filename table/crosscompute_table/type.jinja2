@@ -14,7 +14,7 @@ $('#tool-form').submit(function() {
     $(this).find('th').each(function() {
       columns.push($(this).text());
     });
-    var $rows = $('#timestamp_table_').find('tr');
+    var $rows = $('#' + table_id).find('tr');
     for (var i = 1; i < $rows.length; i++) {
       var $columns = $($rows[i]).find('td'), row = [];
       for (var j = 0; j < $columns.length; j++) {
