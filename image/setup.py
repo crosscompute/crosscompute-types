@@ -2,6 +2,10 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
+ENTRY_POINTS = """
+[crosscompute.types]
+image = crosscompute_image:ImageType
+"""
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
@@ -24,10 +28,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.4.0',
+        'crosscompute>=0.4.4',
     ],
-    entry_points={
-        'crosscompute.types': [
-            'image = crosscompute_image:ImageType',
-        ],
-    })
+    entry_points=ENTRY_POINTS)

@@ -2,6 +2,12 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
+ENTRY_POINTS = """
+[crosscompute.types]
+count = crosscompute_integer:IntegerType
+integer = crosscompute_integer:IntegerType
+length = crosscompute_integer:IntegerType
+"""
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
@@ -27,17 +33,11 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
-        'crosscompute>=0.4.0',
+        'crosscompute>=0.4.4',
         'msgpack-python',
         'simplejson',
     ],
     tests_require=[
         'pytest',
     ],
-    entry_points={
-        'crosscompute.types': [
-            'count = crosscompute_integer:IntegerType',
-            'integer = crosscompute_integer:IntegerType',
-            'length = crosscompute_integer:IntegerType',
-        ],
-    })
+    entry_points=ENTRY_POINTS)

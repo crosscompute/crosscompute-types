@@ -2,6 +2,10 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
+ENTRY_POINTS = """
+[crosscompute.types]
+table = crosscompute_table:TableType
+"""
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
@@ -27,13 +31,8 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
-        'crosscompute>=0.4.0',
+        'crosscompute>=0.4.4',
     ],
     tests_require=[
         'pytest',
-    ],
-    entry_points={
-        'crosscompute.types': [
-            'table = crosscompute_table:TableType',
-        ],
-    })
+    ])

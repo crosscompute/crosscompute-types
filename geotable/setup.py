@@ -2,10 +2,13 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
+ENTRY_POINTS = """
+[crosscompute.types]
+geotable = crosscompute_geotable:GeotableType
+"""
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
-    'CHANGES.rst',
-    'README.rst'])
+    'CHANGES.rst', 'README.rst'])
 setup(
     name='crosscompute-geotable',
     version='0.0.2',
@@ -25,13 +28,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.4.0',
+        'crosscompute>=0.4.4',
         'matplotlib',
         'numpy',
         'shapely',
     ],
-    entry_points={
-        'crosscompute.types': [
-            'geotable = crosscompute_geotable:GeotableType',
-        ],
-    })
+    entry_points=ENTRY_POINTS)
