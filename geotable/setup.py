@@ -28,9 +28,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.4.4',
+        'crosscompute>=0.4.5',
         'matplotlib',
         'numpy',
-        'shapely',
+        'shapely>=1.5.15',
     ],
     entry_points=ENTRY_POINTS)
