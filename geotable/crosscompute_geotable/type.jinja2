@@ -25,7 +25,7 @@ function get_geotable_adjective(key) {
     return 'streets';
   }
 }
-L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpamVuY3cxbzAwMG12ZGx4cGljbGtqMGUifQ.vpDqms08MBqoRgp667Yz5Q') }}';
+L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ') }}';
 $.each(d.crosscompute.geotable.definitions, function(k, v) {
   var map_id = k + '_', table_id = k + '__';
   var map = L.mapbox.map(map_id, 'mapbox.' + get_geotable_adjective(k)), features = [], feature_packs = v[0], properties = v[1];

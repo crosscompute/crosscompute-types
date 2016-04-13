@@ -35,4 +35,5 @@ setup(
     ],
     tests_require=[
         'pytest',
-    ])
+    ],
+    entry_points=ENTRY_POINTS)
