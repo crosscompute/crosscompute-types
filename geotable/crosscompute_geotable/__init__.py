@@ -1,16 +1,14 @@
 import numpy as np
+import pandas
 import re
 from crosscompute.exceptions import DataTypeError
 from crosscompute.types import DataType
+from invisibleroads_macros.iterable import get_lists_from_tuples
 from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
 from matplotlib.colors import colorConverter, rgb2hex
 from os.path import basename
-try:
-    import pandas
-except ImportError:
-    from . import _pandas as pandas
 from shapely import wkt
 from shapely.geometry import mapping
 from shapely.geos import ReadingError
@@ -128,6 +126,7 @@ RADIUS_COLUMN_PATTERN = re.compile(
 
 
 class GeotableType(DataType):
+    suffixes = 'geotable',
     formats = 'msg', 'json', 'csv'  # TODO: Add shp.zip
     template = 'crosscompute_geotable:type.jinja2'
 
@@ -148,10 +147,9 @@ class GeotableType(DataType):
             raise DataTypeError(
                 'Geometry columns missing (%s)' % ', '.join(table.columns))
         if len(geometry_column_names) > 1:
-            get_geometry_properties = lambda x: (1, list(x))  # Assume points
+            parse_geometry = _parse_point_from_tuple
         else:
-            get_geometry_properties = _get_geometry_properties_from_wkt
-
+            parse_geometry = _parse_geometry_from_wkt
         transforms = []
         for get_transform in [
             _get_fill_color_transform,
@@ -164,16 +162,14 @@ class GeotableType(DataType):
 
         for geometry_value, local_table in table.groupby(
                 geometry_column_names):
-            geometry_type_id, geometry_coordinates = get_geometry_properties(
-                geometry_value)
+            geometry_type_id, geometry_xys = parse_geometry(geometry_value)
             local_properties = {}
             for transform in transforms:
                 local_properties, local_table = transform(
                     local_properties, local_table)
             local_table = local_table.drop(geometry_column_names, axis=1)
             items.append((
-                geometry_type_id, geometry_coordinates, local_properties,
-                local_table))
+                geometry_type_id, geometry_xys, local_properties, local_table))
         return items, properties, local_table.columns
 
 
@@ -204,7 +200,7 @@ def is_longitude(column_name):
     return column_name.endswith('longitude') or column_name == 'lon'
 
 
-def _get_geometry_properties_from_wkt(geometry_wkt):
+def _parse_geometry_from_wkt(geometry_wkt):
     try:
         geometry = wkt.loads(geometry_wkt)
     except ReadingError:
@@ -213,8 +209,12 @@ def _get_geometry_properties_from_wkt(geometry_wkt):
         geometry_type_id = GEOMETRY_TYPE_ID_BY_TYPE[geometry.type]
     except KeyError:
         raise DataTypeError('Geometry type not supported (%s)' % geometry.type)
-    geometry_coordinates = _get_lists(mapping(geometry)['coordinates'])
-    return geometry_type_id, geometry_coordinates
+    geometry_xys = get_lists_from_tuples(mapping(geometry)['coordinates'])
+    return geometry_type_id, geometry_xys
+
+
+def _parse_point_from_tuple(point_xy):
+    return 1, list(point_xy)
 
 
 def _get_fill_color_transform(table, geometry_column_names):
@@ -225,13 +225,11 @@ def _get_fill_color_transform(table, geometry_column_names):
     color_scheme, summary_type = name_parts
     local_property_name = 'fillColor'
     if color_scheme == 'color':
-        summary_type = summary_type or 'mean'
-        summarize = lambda x: getattr(x.apply(_get_rgb_array), summary_type)()
+        summarize = _define_summarize_colors(summary_type or 'mean')
         normalize = rgb2hex
     else:
         hex_array = _get_hex_array(color_scheme)
-        summary_type = summary_type or 'sum'
-        summarize = lambda series: getattr(series, summary_type)()
+        summarize = _define_summarize_numbers(summary_type or 'sum')
         normalize_number = define_normalize(_get_summary_domain(
             table, geometry_column_names, column_name, summarize), [0, 8.9999])
 
@@ -268,8 +266,7 @@ def _get_radius_transform(table, geometry_column_names):
         return
     scale, has_range, y_min, y_max, summary_type = name_parts
     local_property_name = 'radius_in_' + scale
-    summary_type = summary_type or 'sum'
-    summarize = lambda series: getattr(series, summary_type)()
+    summarize = _define_summarize_numbers(summary_type or 'sum')
     normalize = define_normalize(_get_summary_domain(
         table, geometry_column_names, column_name, summarize,
     ), [float(y_min), float(y_max)]) if has_range else lambda x: x
@@ -296,6 +293,23 @@ def _get_summary_domain(table, geometry_column_names, column_name, summarize):
     return x_min, x_max
 
 
+def _define_summarize_colors(summary_type):
+
+    def summarize(string_series):
+        rgb_arrays = string_series.apply(_get_rgb_array)
+        return getattr(rgb_arrays, summary_type)()
+
+    return summarize
+
+
+def _define_summarize_numbers(summary_type):
+
+    def summarize(number_series):
+        return getattr(number_series, summary_type)()
+
+    return summarize
+
+
 def _define_transform(column_name, local_property_name, normalize, summarize):
 
     def transform(local_properties, local_table):
@@ -304,8 +318,3 @@ def _define_transform(column_name, local_property_name, normalize, summarize):
         return local_properties, local_table
 
     return transform
-
-
-def _get_lists(t):
-    'Convert tuples to lists, as seen in http://stackoverflow.com/a/1014669'
-    return list(map(_get_lists, t)) if isinstance(t, (list, tuple)) else t

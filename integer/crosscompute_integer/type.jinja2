@@ -4,12 +4,12 @@
 {% macro body_script_loaded() %}{% endmacro %}
 {% macro body_script_inline() %}{% endmacro %}
 
-{% macro render_query(key) %}
-<label for="{{ key }}_" class="control-label">{{ key }}</label>
-<input type="number" step="1" name="{{ key }}" id="{{ key }}_" class="form-control" autocomplete="off" value="{{ format_value(key) }}">
+{% macro render_argument(data_item) %}
+{% set key = data_item.key %}
+<input id="{{ key }}_" name="{{ key }}" class="form-control" autocomplete="off" value="{{ data_item.format_value() }}" type="number" step="1">
 {% endmacro %}
 
-{% macro render_value(key, integer) %}
-<h3>{{ key }}</h3>
-<div id="{{ key }}_">{{ integer | int }}</div>
+{% macro render_property(data_item) %}
+{% set key = data_item.key %}
+<div id="{{ key }}_">{{ data_item.value }}</div>
 {% endmacro %}

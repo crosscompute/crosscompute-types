@@ -11,7 +11,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-table',
-    version='0.3.3',
+    version='0.3.4',
     description='Table data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -31,7 +31,8 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
-        'crosscompute>=0.4.4',
+        'crosscompute>=0.4.5',
+        'pandas>=0.18.0',
     ],
     tests_require=[
         'pytest',

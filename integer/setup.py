@@ -4,16 +4,14 @@ from setuptools import find_packages, setup
 
 ENTRY_POINTS = """
 [crosscompute.types]
-count = crosscompute_integer:IntegerType
 integer = crosscompute_integer:IntegerType
-length = crosscompute_integer:IntegerType
 """
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-integer',
-    version='0.3.1',
+    version='0.3.2',
     description='Integer data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -33,7 +31,7 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
-        'crosscompute>=0.4.4',
+        'crosscompute>=0.4.5',
         'msgpack-python',
         'simplejson',
     ],

@@ -1,19 +1,17 @@
+import pandas
 from crosscompute.exceptions import DataTypeError
 from crosscompute.types import DataType
 from io import StringIO
-try:
-    import pandas
-except ImportError:
-    from . import _pandas as pandas
 from os.path import basename
 
 
 class TableType(DataType):
+    suffixes = 'table',
     formats = 'msg', 'json', 'csv', 'xls', 'xlsx'
-    template = 'crosscompute_table:type.jinja2'
     asset_paths = [
         'mindmup-editabletable.min.js',
     ]
+    template = 'crosscompute_table:type.jinja2'
 
     @classmethod
     def save(Class, path, table):

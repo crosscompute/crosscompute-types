@@ -5,6 +5,7 @@ from crosscompute.types import DataType
 
 
 class IntegerType(DataType):
+    suffixes = 'integer', 'int', 'count', 'length'
     formats = 'msg', 'json', 'txt'
     template = 'crosscompute_integer:type.jinja2'
 
