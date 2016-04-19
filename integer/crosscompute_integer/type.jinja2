@@ -6,7 +6,7 @@
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
-<input id="{{ key }}_" name="{{ key }}" class="form-control" autocomplete="off" value="{{ data_item.format_value() }}" type="number" step="1">
+<input id="{{ key }}_a" name="{{ key }}" class="form-control" autocomplete="off" value="{{ data_item.value }}" type="number" step="1">
 {% endmacro %}
 
 {% macro render_property(data_item) %}

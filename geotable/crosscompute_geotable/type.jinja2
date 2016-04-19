@@ -73,12 +73,12 @@ $.each(d.crosscompute.geotable.definitions, function(k, v) {
 });
 {% endmacro %}
 
-{% macro render_query(key) %}
+{% macro render_argument(data_item) %}
 {% endmacro %}
 
-{% macro render_value(key, value) %}
-{% set items, properties, column_names = value %}
-<h3>{{ key }}</h3>
+{% macro render_property(data_item) %}
+{% set key = data_item.key %}
+{% set items, properties, column_names = data_item.value %}
 <div id="{{ key }}_" class="geotable-map"></div>
 <table id="{{ key }}__" class="table geotable-table">
 <thead><tr>{% for column_name in column_names %}<th>{{ column_name }}</th>{% endfor %}</tr></thead>

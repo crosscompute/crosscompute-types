@@ -7,7 +7,6 @@
 {% endmacro %}
 
 {% macro body_script_inline() %}
-$('.editable-table').editableTableWidget();
 $('#tool-form').submit(function() {
   $('.editable-table').each(function() {
     var $table = $(this), table_id = $table.attr('id'), columns = [], rows = [];
@@ -25,31 +24,19 @@ $('#tool-form').submit(function() {
     $('[name=' + table_id + 'json]').val('{"columns":' + JSON.stringify(columns) + ',"data":' + JSON.stringify(rows) + '}');
   });
 });
+$('.editable-table').editableTableWidget();
 {% endmacro %}
 
-{% macro render_query(key) %}
-<label for="{{ key }}_" class="control-label">{{ key }}</label>
-{# <textarea name="{{ key }}_csv" id="{{ key }}_" class="form-control" rows="10">{{ format_value(key, 'csv').decode('utf-8') }}</textarea> #}
-
-{{ render_table(key, get_value(key), 'editable-table') }}
+{% macro render_argument(data_item) %}
+{% set key = data_item.key %}
+{{ render_property(data_item, 'editable-table') }}
 <input name="{{ key }}_json" type="hidden">
-
-{# <input name="{{ key }}_json" type="hidden"> #}
-
-{# 
-<script>
-d.crosscompute.table.definitions['{{ key }}'] = {{ format_value(key, 'json').decode('utf-8') }};
-</script>
-#}
 {% endmacro %}
 
-{% macro render_value(key, table) %}
-<h3>{{ key }}</h3>
-{{ render_table(key, table) }}
-{% endmacro %}
-
-{% macro render_table(key, table, class='') %}
-<table id="{{ key + '_' }}" class="table {{ class }}">
+{% macro render_property(data_item, class='') %}
+{% set key = data_item.key %}
+{% set table = data_item.value %}
+<table id="{{ key }}_" class="table {{ class }}">
   <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
 {% for index, row in table[:20].fillna('').iterrows() %}
   <tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>

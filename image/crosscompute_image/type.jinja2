@@ -4,10 +4,9 @@
 {% macro body_script_loaded() %}{% endmacro %}
 {% macro body_script_inline() %}{% endmacro %}
 
-{% macro render_query(key) %}
+{% macro render_argument(data_item) %}
 {% endmacro %}
 
-{% macro render_value(key, image_path) %}
-<h3>{{ key }}</h3>
-<img src="{{ get_url_from_path(image_path) }}">
+{% macro render_property(data_item) %}
+<img src="{{ get_url_from_path(data_item.value) }}">
 {% endmacro %}

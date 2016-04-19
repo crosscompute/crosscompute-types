@@ -31,7 +31,7 @@ setup(
         'crosscompute>=0.4.5',
         'invisibleroads_macros>=0.6.8',
         'matplotlib',
-        'numpy',
+        'numpy>=1.11.0',
         'pandas>=0.18.0',
         'shapely>=1.5.15',
     ],
