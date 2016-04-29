@@ -22,7 +22,7 @@ setup(
     ],
     author='Roy Hyunjin Han',
     author_email='rhh@crosscompute.com',
-    url='https://crosscompute.com',
+    url='https://crosscompute.com/docs',
     keywords='web pyramid pylons invisibleroads crosscompute',
     packages=find_packages(),
     include_package_data=True,

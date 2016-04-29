@@ -11,6 +11,8 @@
 .ipynb_checkpoints
 build
 dist
+# Sass
+.sass-cache
 # Transient
 *.log
 *.tmp

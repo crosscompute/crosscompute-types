@@ -1,12 +1,20 @@
+{% from 'invisibleroads_uploads:templates/parts.jinja2' import render_upload_button %}
+
 {% macro head_style_loaded() %}{% endmacro %}
 {% macro head_style_inline() %}{% endmacro %}
 {% macro head_script_inline() %}{% endmacro %}
-
-{% macro body_script_loaded() %}
-<script src='/_/crosscompute/table/mindmup-editabletable.min.js'></script>
-{% endmacro %}
+{% macro body_script_loaded() %}{% endmacro %}
 
 {% macro body_script_inline() %}
+$('.table-upload').on('uploaded.ir.upload', function(e, d) {
+/*
+  $.post('', {
+  }, function(d) {
+  }, 'json');
+*/
+});
+
+
 $('#tool-form').submit(function() {
   $('.editable-table').each(function() {
     var $table = $(this), table_id = $table.attr('id'), columns = [], rows = [];
@@ -24,11 +32,16 @@ $('#tool-form').submit(function() {
     $('[name=' + table_id + 'json]').val('{"columns":' + JSON.stringify(columns) + ',"data":' + JSON.stringify(rows) + '}');
   });
 });
-$('.editable-table').editableTableWidget();
+$('.editable-table').editableTableWidget({'editor': $('<input class="editable-table-input">')});
 {% endmacro %}
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
+
+<div>
+{{ render_upload_button(id='%s-upload' % key, text='Browse', class='table-upload') }}
+</div>
+
 {{ render_property(data_item, 'editable-table') }}
 <input name="{{ key }}_json" type="hidden">
 {% endmacro %}
@@ -37,9 +50,13 @@ $('.editable-table').editableTableWidget();
 {% set key = data_item.key %}
 {% set table = data_item.value %}
 <table id="{{ key }}_" class="table {{ class }}">
+<thead>
   <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
-{% for index, row in table[:20].fillna('').iterrows() %}
+</thead>
+<tbody>
+{% for index, row in table.fillna('').iterrows() %}
   <tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
 {% endfor %}
+</tbody>
 </table>
 {% endmacro %}

@@ -4,14 +4,18 @@ from crosscompute.types import DataType
 from io import StringIO
 from os.path import basename
 
+from .views import import_table
+
 
 class TableType(DataType):
     suffixes = 'table',
     formats = 'msg', 'json', 'csv', 'xls', 'xlsx'
-    asset_paths = [
-        'mindmup-editabletable.min.js',
+    style = 'crosscompute_table:assets/part.min.css'
+    script = 'crosscompute_table:assets/part.min.js'
+    template = 'crosscompute_table:templates/type.jinja2'
+    views = [
+        import_table,
     ]
-    template = 'crosscompute_table:type.jinja2'
 
     @classmethod
     def save(Class, path, table):

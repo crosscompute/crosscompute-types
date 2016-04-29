@@ -1,0 +1,6 @@
+.editable-table td:hover {
+  outline: #99ceff auto 3px;
+}
+.editable-table-input, .editable-table td:focus {
+	outline: #337ab7 auto 3px;
+}
