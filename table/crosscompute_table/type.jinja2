@@ -7,13 +7,16 @@
 
 {% macro body_script_inline() %}
 $('.table-upload').on('uploaded.ir.upload', function(e, d) {
-/*
-  $.post('', {
-  }, function(d) {
-  }, 'json');
-*/
+  var name = $(this).parent().data('name');
+  var $target = $('#' + name + '-upload');
+  $.post('/c/table/import_table', {'id': d.id, 'name': name})
+    .fail(function(d) {
+      $target.html(d[name]);
+    })
+    .success(function(d) {
+      $target.html(d);
+    });
 });
-
 
 $('#tool-form').submit(function() {
   $('.editable-table').each(function() {
@@ -37,26 +40,25 @@ $('.editable-table').editableTableWidget({'editor': $('<input class="editable-ta
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
-
-<div>
-{{ render_upload_button(id='%s-upload' % key, text='Browse', class='table-upload') }}
-</div>
-
-{{ render_property(data_item, 'editable-table') }}
-<input name="{{ key }}_json" type="hidden">
+<div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='table-upload') }}</div>
+<div id="{{ key }}-upload">{{ render_property(data_item, class='editable-table') }}</div>
+<input name="{{ key }}-json" type="hidden">
 {% endmacro %}
 
-{% macro render_property(data_item, class='') %}
-{% set key = data_item.key %}
+{% macro render_property(data_item, stamp='', class='') %}
+{% set key = data_item.key + stamp %}
 {% set table = data_item.value %}
-<table id="{{ key }}_" class="table {{ class }}">
+<div class="scrollable">
+<table id="{{ key }}" class="table {{ class }}">
 <thead>
-  <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
+<tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
 </thead>
 <tbody>
 {% for index, row in table.fillna('').iterrows() %}
-  <tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
+<tr>{% for column in row %}<td>{{ column }}</td>{% endfor %}</tr>
 {% endfor %}
 </tbody>
 </table>
+</div>
+<table id="{{ key }}" class="table {{ class }}">
 {% endmacro %}

@@ -3,3 +3,7 @@
 
 .editable-table-input, .editable-table td:focus {
   outline: #337ab7 auto 3px; }
+
+.scrollable {
+  height: 300px;
+  overflow: auto; }

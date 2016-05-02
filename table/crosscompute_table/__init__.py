@@ -1,10 +1,9 @@
 import pandas
+from invisibleroads_macros.disk import get_file_extension
 from crosscompute.exceptions import DataTypeError
+from crosscompute.scripts.serve import import_upload
 from crosscompute.types import DataType
 from io import StringIO
-from os.path import basename
-
-from .views import import_table
 
 
 class TableType(DataType):
@@ -12,9 +11,9 @@ class TableType(DataType):
     formats = 'msg', 'json', 'csv', 'xls', 'xlsx'
     style = 'crosscompute_table:assets/part.min.css'
     script = 'crosscompute_table:assets/part.min.js'
-    template = 'crosscompute_table:templates/type.jinja2'
+    template = 'crosscompute_table:type.jinja2'
     views = [
-        import_table,
+        'import_table',
     ]
 
     @classmethod
@@ -29,7 +28,7 @@ class TableType(DataType):
             table.to_excel(path)
         else:
             raise DataTypeError(
-                'File format not supported (%s)' % basename(path))
+                'File format not supported (%s)' % get_file_extension(path))
 
     @classmethod
     def load(Class, path):
@@ -43,7 +42,7 @@ class TableType(DataType):
             table = pandas.read_excel(path)
         else:
             raise DataTypeError(
-                'File format not supported (%s)' % basename(path))
+                'File format not supported (%s)' % get_file_extension(path))
         return table
 
     @classmethod
@@ -64,3 +63,7 @@ class TableType(DataType):
     @classmethod
     def match(Class, table):
         return hasattr(table, 'iterrows')
+
+
+def import_table(request):
+    return import_upload(request, TableType)

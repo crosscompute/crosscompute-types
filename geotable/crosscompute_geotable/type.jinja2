@@ -27,7 +27,7 @@ function get_geotable_adjective(key) {
 }
 L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ') }}';
 $.each(d.crosscompute.geotable.definitions, function(k, v) {
-  var map_id = k + '_', table_id = k + '__';
+  var map_id = k + '-map', table_id = k + '-table';
   var map = L.mapbox.map(map_id, 'mapbox.' + get_geotable_adjective(k)), features = [], feature_packs = v[0], properties = v[1];
   for (var i = 0; i < feature_packs.length; i++) {
     var p = feature_packs[i], geometry_type_id = p[0], geometry_coordinates = p[1], d = $.extend({'color': 'black', 'weight': 2, 'opacity': 0.7, 'fillColor': 'yellow', 'fillOpacity': 0.5}, properties, p[2]), feature;
@@ -76,14 +76,14 @@ $.each(d.crosscompute.geotable.definitions, function(k, v) {
 {% macro render_argument(data_item) %}
 {% endmacro %}
 
-{% macro render_property(data_item) %}
-{% set key = data_item.key %}
+{% macro render_property(data_item, stamp='') %}
+{% set key = data_item.key + stamp %}
 {% set items, properties, column_names = data_item.value %}
-<div id="{{ key }}_" class="geotable-map"></div>
-<table id="{{ key }}__" class="table geotable-table">
+<div id="{{ key }}-map" class="geotable-map"></div>
+<table id="{{ key }}-table" class="table geotable-table">
 <thead><tr>{% for column_name in column_names %}<th>{{ column_name }}</th>{% endfor %}</tr></thead>
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
-<tbody id="{{ key }}__{{ loop.index0 }}">
+<tbody id="{{ key }}-row{{ loop.index0 }}">
 {%- for index, row in local_table.fillna('').iterrows() -%}
 <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
 {%- endfor -%}

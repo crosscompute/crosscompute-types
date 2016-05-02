@@ -6,10 +6,10 @@
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
-<textarea id="{{ key }}_a" name="{{ key }}_txt" class="form-control" rows="10">{{ data_item.value }}</textarea>
+<textarea id="{{ key }}" name="{{ key }}_txt" class="form-control" rows="10">{{ data_item.value }}</textarea>
 {% endmacro %}
 
-{% macro render_property(data_item) %}
+{% macro render_property(data_item, stamp='') %}
 {% from 'crosscompute:types/string.jinja2' import render_property %}
-{{ render_property(data_item) }}
+{{ render_property(data_item, stamp=stamp) }}
 {% endmacro %}
