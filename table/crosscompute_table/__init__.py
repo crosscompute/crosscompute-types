@@ -4,6 +4,7 @@ from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
 from crosscompute.types import DataType
 from io import StringIO
+from os.path import exists
 
 
 class TableType(DataType):
@@ -32,6 +33,8 @@ class TableType(DataType):
 
     @classmethod
     def load(Class, path):
+        if not exists(path):
+            raise IOError
         if path.endswith('.msg'):
             table = pandas.read_msgpack(path)
         elif path.endswith('.json'):
@@ -66,4 +69,6 @@ class TableType(DataType):
 
 
 def import_table(request):
-    return import_upload(request, TableType)
+    return import_upload(request, TableType, {
+        'class': 'editable-table',
+    })

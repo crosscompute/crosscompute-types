@@ -8,7 +8,7 @@ from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
 from matplotlib.colors import colorConverter, rgb2hex
-from os.path import basename
+from os.path import basename, exists
 from shapely import wkt
 from shapely.geometry import mapping
 from shapely.geos import ReadingError
@@ -132,6 +132,8 @@ class GeotableType(DataType):
 
     @classmethod
     def load(Class, path):
+        if not exists(path):
+            raise IOError
         if path.endswith('.msg'):
             table = pandas.read_msgpack(path)
         elif path.endswith('.json'):

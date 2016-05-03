@@ -6,15 +6,24 @@
 {% macro body_script_loaded() %}{% endmacro %}
 
 {% macro body_script_inline() %}
+function make_editable_table($o) {
+  $o.editableTableWidget({'editor': $('<input class="editable-table-input">')});
+}
+
 $('.table-upload').on('uploaded.ir.upload', function(e, d) {
-  var name = $(this).parent().data('name');
-  var $target = $('#' + name + '-upload');
-  $.post('/c/table/import_table', {'id': d.id, 'name': name})
+  var upload_id = d.id;
+  var field_id = $(this).parent().data('name');
+  var target_id = field_id + '-upload';
+  var $target = $('#' + target_id);
+
+  $.post('/c/table/import_table', {'id': upload_id, 'name': field_id})
     .fail(function(d) {
-      $target.html(d[name]);
+      $target.find('.scrollable').html(d.responseJSON[field_id]);
     })
     .success(function(d) {
       $target.html(d);
+      make_editable_table($target.find('.editable-table'));
+      // $('[name=' + target_id + ']').val(upload_id);
     });
 });
 
@@ -32,10 +41,11 @@ $('#tool-form').submit(function() {
       }
       rows.push(row);
     }
-    $('[name=' + table_id + 'json]').val('{"columns":' + JSON.stringify(columns) + ',"data":' + JSON.stringify(rows) + '}');
+    $('[name=' + table_id + '-json]').val('{"columns":' + JSON.stringify(columns) + ',"data":' + JSON.stringify(rows) + '}');
   });
 });
-$('.editable-table').editableTableWidget({'editor': $('<input class="editable-table-input">')});
+
+make_editable_table($('.editable-table'));
 {% endmacro %}
 
 {% macro render_argument(data_item) %}
@@ -43,12 +53,16 @@ $('.editable-table').editableTableWidget({'editor': $('<input class="editable-ta
 <div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='table-upload') }}</div>
 <div id="{{ key }}-upload">{{ render_property(data_item, class='editable-table') }}</div>
 <input name="{{ key }}-json" type="hidden">
+{#
+<input name="{{ key }}-upload" type="hidden">
+#}
 {% endmacro %}
 
 {% macro render_property(data_item, stamp='', class='') %}
 {% set key = data_item.key + stamp %}
 {% set table = data_item.value %}
 <div class="scrollable">
+{% if table is not none %}
 <table id="{{ key }}" class="table {{ class }}">
 <thead>
 <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
@@ -59,6 +73,6 @@ $('.editable-table').editableTableWidget({'editor': $('<input class="editable-ta
 {% endfor %}
 </tbody>
 </table>
+{% endif %}
 </div>
-<table id="{{ key }}" class="table {{ class }}">
 {% endmacro %}
