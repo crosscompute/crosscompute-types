@@ -50,7 +50,7 @@ make_editable_table($('.editable-table'));
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
-<div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='table-upload') }}</div>
+<div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg table-upload') }}</div>
 <div id="{{ key }}-upload">{{ render_property(data_item, class='editable-table') }}</div>
 <input name="{{ key }}-json" type="hidden">
 {#
