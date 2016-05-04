@@ -1,7 +1,10 @@
+import geometryIO
 import numpy as np
 import pandas
 import re
+from cPickle import dump, load
 from crosscompute.exceptions import DataTypeError
+from crosscompute.scripts.serve import import_upload
 from crosscompute.types import DataType
 from invisibleroads_macros.iterable import get_lists_from_tuples
 from invisibleroads_macros.math import define_normalize
@@ -127,19 +130,69 @@ RADIUS_COLUMN_PATTERN = re.compile(
 
 class GeotableType(DataType):
     suffixes = 'geotable',
-    formats = 'msg', 'json', 'csv'  # TODO: Add shp.zip
+    formats = 'pkl', 'msg', 'json', 'csv', 'zip'
     template = 'crosscompute_geotable:type.jinja2'
+    views = [
+        'import_geotable',
+    ]
+
+    @classmethod
+    def save(Class, path, value):
+        if path.endswith('.pkl'):
+            dump(value, open(path, 'wb'), -1)
+        """
+        if path.endswith('.shp.zip'):
+            shapely_geometries = []
+            for (
+                geometry_type_id, geometry_xys, local_properties, local_table,
+            ) in value[0]:
+                GeometryClass =
+                GeometryClass()
+
+            field_packs =
+            field_definitions =
+            geometryIO.save(
+                path,
+                geometryIO.proj4LL,
+                shapely_geometries,
+                field_packs,
+                field_definitions)
+        """
 
     @classmethod
     def load(Class, path):
         if not exists(path):
             raise IOError
-        if path.endswith('.msg'):
+        if path.endswith('.pkl'):
+            value = load(open(path, 'rb'))
+            if not len(value) == 3:
+                raise IOError
+            if value[0]:
+                if not len(value[0]) == 4:
+                    raise IOError
+                if not isinstance(value[0][3], pandas.DataFrame):
+                    raise IOError
+            return value
+        elif path.endswith('.msg'):
             table = pandas.read_msgpack(path)
         elif path.endswith('.json'):
             table = pandas.read_json(path)
         elif path.endswith('.csv'):
             table = pandas.read_csv(path)
+        elif path.endswith('.zip'):
+            [
+                proj4,
+                geometries,
+                field_packs,
+                field_definitions,
+            ] = geometryIO.load(path)
+            # Convert to LL
+            normalize_geometry = geometryIO.get_transformGeometry(proj4)
+            geometries = [normalize_geometry(x) for x in geometries]
+            # Generate table
+            table = pandas.DataFrame(
+                field_packs, columns=[x[0] for x in field_definitions])
+            table['WKT'] = [x.wkt for x in geometries]
         else:
             raise DataTypeError(
                 'File format not supported (%s)' % basename(path))
@@ -173,6 +226,10 @@ class GeotableType(DataType):
             items.append((
                 geometry_type_id, geometry_xys, local_properties, local_table))
         return items, properties, local_table.columns
+
+
+def import_geotable(request):
+    return import_upload(request, GeotableType, {})
 
 
 def get_geometry_column_names(column_names):
