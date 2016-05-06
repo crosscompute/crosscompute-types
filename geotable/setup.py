@@ -29,6 +29,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'crosscompute>=0.4.5',
+        'crosscompute_table>=0.3.4',
         'invisibleroads_macros>=0.6.8',
         'matplotlib',
         'numpy>=1.11.0',

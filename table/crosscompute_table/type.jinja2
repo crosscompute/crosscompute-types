@@ -6,8 +6,22 @@
 {% macro body_script_loaded() %}{% endmacro %}
 
 {% macro body_script_inline() %}
-function make_editable_table($o) {
-  $o.editableTableWidget({'editor': $('<input class="editable-table-input">')});
+function make_editable_table($table) {
+  $table.editableTableWidget({
+    'editor': $('<input class="editable-table-input">')
+  });
+}
+
+function get_csv($table) {
+  var rows = [];
+  $.each($table.find('tr'), function(i, row) {
+    var columns = [];
+    $.each($(row).children('th,td'), function(i, column) {
+      columns.push($(column).text());
+    });
+    rows.push(columns.join(','));
+  });
+  return rows.join('\n');
 }
 
 $('.table-upload').on('uploaded.ir.upload', function(e, d) {
@@ -29,19 +43,8 @@ $('.table-upload').on('uploaded.ir.upload', function(e, d) {
 
 $('#tool-form').submit(function() {
   $('.editable-table').each(function() {
-    var $table = $(this), table_id = $table.attr('id'), columns = [], rows = [];
-    $(this).find('th').each(function() {
-      columns.push($(this).text());
-    });
-    var $rows = $('#' + table_id).find('tr');
-    for (var i = 1; i < $rows.length; i++) {
-      var $columns = $($rows[i]).find('td'), row = [];
-      for (var j = 0; j < $columns.length; j++) {
-        row.push($($columns[j]).text());
-      }
-      rows.push(row);
-    }
-    $('[name=' + table_id + '-json]').val('{"columns":' + JSON.stringify(columns) + ',"data":' + JSON.stringify(rows) + '}');
+    var $table = $(this), table_id = $table.attr('id');
+    $('[name=' + table_id + '-csv]').val(get_csv($(this)));
   });
 });
 
@@ -52,7 +55,7 @@ make_editable_table($('.editable-table'));
 {% set key = data_item.key %}
 <div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg table-upload') }}</div>
 <div id="{{ key }}-upload">{{ render_property(data_item, class='editable-table') }}</div>
-<input name="{{ key }}-json" type="hidden">
+<input name="{{ key }}-csv" type="hidden">
 {#
 <input name="{{ key }}-upload" type="hidden">
 #}

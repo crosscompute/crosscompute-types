@@ -75,9 +75,11 @@ function draw_map(k, v) {
     });
     features.push(feature);
   }
-  map.fitBounds(L.featureGroup(features).addTo(map).getBounds()).on('click', function() {
-    $('#' + table_id).hide();
-  });
+  if (features.length) {
+    map.fitBounds(L.featureGroup(features).addTo(map).getBounds()).on('click', function() {
+      $('#' + table_id).hide();
+    });
+  }
 }
 
 $.each(d.crosscompute.geotable.definitions, draw_map);
@@ -112,8 +114,9 @@ $('.geotable-upload').on('uploaded.ir.upload', function(e, d) {
 
 {% macro render_property(data_item, stamp='') %}
 {% set key = data_item.key + stamp %}
-{% if data_item.value %}
-{% set items, properties, column_names = data_item.value %}
+{% if data_item.value is not none %}
+{% set items, properties = data_item.value.interpret() %}
+{% set columns = items[-1].columns if items else [] %}
 <div id="{{ key }}-map" class="geotable-map"></div>
 <table id="{{ key }}-table" class="table geotable-table">
 <thead><tr>{% for column_name in column_names %}<th>{{ column_name }}</th>{% endfor %}</tr></thead>

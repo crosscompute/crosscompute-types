@@ -9,7 +9,7 @@ from os.path import exists
 
 class TableType(DataType):
     suffixes = 'table',
-    formats = 'msg', 'json', 'csv', 'xls', 'xlsx'
+    formats = 'csv', 'msg', 'json', 'xls', 'xlsx'
     style = 'crosscompute_table:assets/part.min.css'
     script = 'crosscompute_table:assets/part.min.js'
     template = 'crosscompute_table:type.jinja2'
@@ -19,12 +19,12 @@ class TableType(DataType):
 
     @classmethod
     def save(Class, path, table):
-        if path.endswith('.msg'):
+        if path.endswith('.csv'):
+            table.to_csv(path, index=False)
+        elif path.endswith('.msg'):
             table.to_msgpack(path, compress='blosc')
         elif path.endswith('.json'):
             table.to_json(path)
-        elif path.endswith('.csv'):
-            table.to_csv(path, index=False)
         elif path.endswith('.xls') or path.endswith('.xlsx'):
             table.to_excel(path)
         else:
@@ -35,12 +35,12 @@ class TableType(DataType):
     def load(Class, path):
         if not exists(path):
             raise IOError
-        if path.endswith('.msg'):
+        if path.endswith('.csv'):
+            table = pandas.read_csv(path, skipinitialspace=True)
+        elif path.endswith('.msg'):
             table = pandas.read_msgpack(path)
         elif path.endswith('.json'):
             table = pandas.read_json(path, orient='split')
-        elif path.endswith('.csv'):
-            table = pandas.read_csv(path, skipinitialspace=True)
         elif path.endswith('.xls') or path.endswith('.xlsx'):
             table = pandas.read_excel(path)
         else:

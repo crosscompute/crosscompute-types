@@ -2,19 +2,19 @@ import geometryIO
 import numpy as np
 import pandas
 import re
-from cPickle import dump, load
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
-from crosscompute.types import DataType
+from crosscompute_table import TableType
 from invisibleroads_macros.iterable import get_lists_from_tuples
 from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
 from matplotlib.colors import colorConverter, rgb2hex
-from os.path import basename, exists
+from os.path import exists
 from shapely import wkt
 from shapely.geometry import mapping
 from shapely.geos import ReadingError
+from types import MethodType
 
 
 GEOMETRY_TYPE_ID_BY_TYPE = {
@@ -128,58 +128,21 @@ RADIUS_COLUMN_PATTERN = re.compile(
     r'(?: (range) (\d+) (\d+))?' + SUMMARY_TYPE_EXPRESSION)
 
 
-class GeotableType(DataType):
+class GeotableType(TableType):
     suffixes = 'geotable',
-    formats = 'pkl', 'msg', 'json', 'csv', 'zip'
+    formats = TableType.formats + ('zip',)
+    style = 'crosscompute_geotable:assets/part.min.css'
+    script = 'crosscompute_geotable:assets/part.min.js'
     template = 'crosscompute_geotable:type.jinja2'
     views = [
         'import_geotable',
     ]
 
     @classmethod
-    def save(Class, path, value):
-        if path.endswith('.pkl'):
-            dump(value, open(path, 'wb'), -1)
-        """
-        if path.endswith('.shp.zip'):
-            shapely_geometries = []
-            for (
-                geometry_type_id, geometry_xys, local_properties, local_table,
-            ) in value[0]:
-                GeometryClass =
-                GeometryClass()
-
-            field_packs =
-            field_definitions =
-            geometryIO.save(
-                path,
-                geometryIO.proj4LL,
-                shapely_geometries,
-                field_packs,
-                field_definitions)
-        """
-
-    @classmethod
     def load(Class, path):
         if not exists(path):
             raise IOError
-        if path.endswith('.pkl'):
-            value = load(open(path, 'rb'))
-            if not len(value) == 3:
-                raise IOError
-            if value[0]:
-                if not len(value[0]) == 4:
-                    raise IOError
-                if not isinstance(value[0][3], pandas.DataFrame):
-                    raise IOError
-            return value
-        elif path.endswith('.msg'):
-            table = pandas.read_msgpack(path)
-        elif path.endswith('.json'):
-            table = pandas.read_json(path)
-        elif path.endswith('.csv'):
-            table = pandas.read_csv(path)
-        elif path.endswith('.zip'):
+        if path.endswith('.zip'):
             [
                 proj4,
                 geometries,
@@ -194,42 +157,47 @@ class GeotableType(DataType):
                 field_packs, columns=[x[0] for x in field_definitions])
             table['WKT'] = [x.wkt for x in geometries]
         else:
-            raise DataTypeError(
-                'File format not supported (%s)' % basename(path))
-        items, properties = [], {}
-        geometry_column_names = get_geometry_column_names(table.columns)
-        if not geometry_column_names:
-            raise DataTypeError(
-                'Geometry columns missing (%s)' % ', '.join(table.columns))
-        if len(geometry_column_names) > 1:
-            parse_geometry = _parse_point_from_tuple
-        else:
-            parse_geometry = _parse_geometry_from_wkt
-        transforms = []
-        for get_transform in [
-            _get_fill_color_transform,
-            _get_radius_transform,
-        ]:
-            transform = get_transform(table, geometry_column_names)
-            if not transform:
-                continue
-            transforms.append(transform)
-
-        for geometry_value, local_table in table.groupby(
-                geometry_column_names):
-            geometry_type_id, geometry_xys = parse_geometry(geometry_value)
-            local_properties = {}
-            for transform in transforms:
-                local_properties, local_table = transform(
-                    local_properties, local_table)
-            local_table = local_table.drop(geometry_column_names, axis=1)
-            items.append((
-                geometry_type_id, geometry_xys, local_properties, local_table))
-        return items, properties, local_table.columns
+            table = super(GeotableType, Class).load(path)
+        # TODO: Consider whether there is a better way to do this
+        table.interpret = MethodType(_interpret, table, pandas.DataFrame)
+        return table
 
 
 def import_geotable(request):
     return import_upload(request, GeotableType, {})
+
+
+def _interpret(table):
+    items, properties = [], {}
+    geometry_column_names = get_geometry_column_names(table.columns)
+    if not geometry_column_names:
+        raise DataTypeError(
+            'Geometry columns missing (%s)' % ', '.join(table.columns))
+    if len(geometry_column_names) > 1:
+        parse_geometry = _parse_point_from_tuple
+    else:
+        parse_geometry = _parse_geometry_from_wkt
+    transforms = []
+    for get_transform in [
+        _get_fill_color_transform,
+        _get_radius_transform,
+    ]:
+        transform = get_transform(table, geometry_column_names)
+        if not transform:
+            continue
+        transforms.append(transform)
+
+    for geometry_value, local_table in table.groupby(
+            geometry_column_names):
+        geometry_type_id, geometry_xys = parse_geometry(geometry_value)
+        local_properties = {}
+        for transform in transforms:
+            local_properties, local_table = transform(
+                local_properties, local_table)
+        local_table = local_table.drop(geometry_column_names, axis=1)
+        items.append((
+            geometry_type_id, geometry_xys, local_properties, local_table))
+    return items, properties
 
 
 def get_geometry_column_names(column_names):
