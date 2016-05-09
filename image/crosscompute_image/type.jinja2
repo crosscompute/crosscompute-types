@@ -1,5 +1,7 @@
 {% macro head_style_loaded() %}{% endmacro %}
-{% macro head_style_inline() %}{% endmacro %}
+{% macro head_style_inline() %}
+img {width: 100%}
+{% endmacro %}
 {% macro head_script_inline() %}{% endmacro %}
 {% macro body_script_loaded() %}{% endmacro %}
 {% macro body_script_inline() %}{% endmacro %}
@@ -7,6 +9,6 @@
 {% macro render_argument(data_item) %}
 {% endmacro %}
 
-{% macro render_property(data_item) %}
-<img src="{{ get_url_from_path(data_item.value) }}">
+{% macro render_property(data_item, stamp='') %}
+<div><img src="{{ data_item.format_value() }}"></div>
 {% endmacro %}
