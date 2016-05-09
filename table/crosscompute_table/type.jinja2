@@ -17,7 +17,7 @@ function get_csv($table) {
   $.each($table.find('tr'), function(i, row) {
     var columns = [];
     $.each($(row).children('th,td'), function(i, column) {
-      columns.push($(column).text());
+      columns.push('"' + $(column).text().replace(/"/g, '""') + '"');
     });
     rows.push(columns.join(','));
   });
