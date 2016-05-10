@@ -4,61 +4,13 @@
 {% macro head_style_inline() %}{% endmacro %}
 {% macro head_script_inline() %}{% endmacro %}
 {% macro body_script_loaded() %}{% endmacro %}
-
-{% macro body_script_inline() %}
-function make_editable_table($table) {
-  $table.editableTableWidget({
-    'editor': $('<input class="editable-table-input">')
-  });
-}
-
-function get_csv($table) {
-  var rows = [];
-  $.each($table.find('tr'), function(i, row) {
-    var columns = [];
-    $.each($(row).children('th,td'), function(i, column) {
-      columns.push('"' + $(column).text().replace(/"/g, '""') + '"');
-    });
-    rows.push(columns.join(','));
-  });
-  return rows.join('\n');
-}
-
-$('.table-upload').on('uploaded.ir.upload', function(e, d) {
-  var upload_id = d.id;
-  var field_id = $(this).parent().data('name');
-  var target_id = field_id + '-upload';
-  var $target = $('#' + target_id);
-
-  $.post('/c/table/import_table', {'id': upload_id, 'name': field_id})
-    .fail(function(d) {
-      $target.find('.scrollable').html(d.responseJSON[field_id]);
-    })
-    .success(function(d) {
-      $target.html(d);
-      make_editable_table($target.find('.editable-table'));
-      // $('[name=' + target_id + ']').val(upload_id);
-    });
-});
-
-$('#tool-form').submit(function() {
-  $('.editable-table').each(function() {
-    var $table = $(this), table_id = $table.attr('id');
-    $('[name=' + table_id + '-csv]').val(get_csv($(this)));
-  });
-});
-
-make_editable_table($('.editable-table'));
-{% endmacro %}
+{% macro body_script_inline() %}{% endmacro %}
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
 <div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg table-upload') }}</div>
 <div id="{{ key }}-upload">{{ render_property(data_item, class='editable-table') }}</div>
 <input name="{{ key }}-csv" type="hidden">
-{#
-<input name="{{ key }}-upload" type="hidden">
-#}
 {% endmacro %}
 
 {% macro render_property(data_item, stamp='', class='') %}

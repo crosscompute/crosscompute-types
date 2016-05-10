@@ -11,8 +11,8 @@
 {% endmacro %}
 
 {% macro head_script_inline() %}
-d.crosscompute.geotable = {};
-d.crosscompute.geotable.definitions = {};
+var v = d.crosscompute.geotable = {};
+v.definitions = {};
 {% endmacro %}
 
 {% macro body_script_loaded() %}
@@ -66,7 +66,7 @@ function draw_map(k, v) {
         break;
     }
 
-    feature.geotable = {'table_id': table_id, 'tbody_id': table_id + i};
+    feature.geotable = {'table_id': table_id, 'tbody_id': table_id.replace('-table', '-row') + i};
     feature.on('click', function() {
       var a = this.geotable;
       var b = $('#' + a.tbody_id).show();
@@ -116,7 +116,7 @@ $('.geotable-upload').on('uploaded.ir.upload', function(e, d) {
 {% set key = data_item.key + stamp %}
 {% if data_item.value is not none %}
 {% set items, properties = data_item.value.interpret() %}
-{% set columns = items[-1].columns if items else [] %}
+{% set column_names = items[0][-1].columns if items else [] %}
 <div id="{{ key }}-map" class="geotable-map"></div>
 <table id="{{ key }}-table" class="table geotable-table">
 <thead><tr>{% for column_name in column_names %}<th>{{ column_name }}</th>{% endfor %}</tr></thead>

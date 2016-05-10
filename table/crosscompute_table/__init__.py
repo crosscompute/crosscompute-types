@@ -36,7 +36,8 @@ class TableType(DataType):
         if not exists(path):
             raise IOError
         if path.endswith('.csv'):
-            table = pandas.read_csv(path, skipinitialspace=True)
+            table = pandas.read_csv(
+                path, encoding='utf-8', skipinitialspace=True)
         elif path.endswith('.msg'):
             table = pandas.read_msgpack(path)
         elif path.endswith('.json'):
@@ -51,7 +52,8 @@ class TableType(DataType):
     @classmethod
     def parse(Class, text):
         try:
-            table = pandas.read_csv(StringIO(text), skipinitialspace=True)
+            table = pandas.read_csv(
+                StringIO(text), encoding='utf-8', skipinitialspace=True)
         except (TypeError, ValueError):
             raise TypeError('expected_table')
         return table
