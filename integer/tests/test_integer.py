@@ -1,18 +1,21 @@
 from crosscompute.tests import run, serve_bad_request
 
 
-def test_good_input():
-    r = run('load-integer', {'x_integer': 2})
+def test_good_input(tmpdir):
+    args = str(tmpdir), 'load-integer', {'x_integer': 2}
+    r = run(*args)
     r['standard_outputs']['xx_integer'] == 4
 
 
-def test_bad_input():
-    errors = serve_bad_request('load-integer', {'x_integer': 'abc'})
+def test_bad_input(tmpdir):
+    args = str(tmpdir), 'load-integer', {'x_integer': 'abc'}
+    errors = serve_bad_request(*args)
     assert 'x_integer' in errors
 
 
-def test_bad_output():
-    r = run('save-bad-integer')
+def test_bad_output(tmpdir):
+    args = str(tmpdir), 'save-bad-integer'
+    r = run(*args)
     assert 'z_integer.error' in r['type_errors']
 
 

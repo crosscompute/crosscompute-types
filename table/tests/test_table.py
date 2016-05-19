@@ -1,8 +1,9 @@
-from crosscompute.tests import run, serve
+from crosscompute.tests import run
 
 
-def test_good_input():
-    r = run('load-table', {'a_table_path': 'good.csv'})
+def test_good_input(tmpdir):
+    args = str(tmpdir), 'load-table', {'a_table_path': 'good.csv'}
+    r = run(*args)
     assert r['standard_outputs']['row_count'] == 3
 
 
