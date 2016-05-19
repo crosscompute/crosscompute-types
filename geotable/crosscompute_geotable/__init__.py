@@ -172,7 +172,7 @@ def _interpret(table):
     geometry_column_names = get_geometry_column_names(table.columns)
     if not geometry_column_names:
         raise DataTypeError(
-            'Geometry columns missing (%s)' % ', '.join(table.columns))
+            'geometry columns missing (%s)' % ', '.join(table.columns))
     if len(geometry_column_names) > 1:
         parse_geometry = _parse_point_from_tuple
     else:
@@ -231,11 +231,11 @@ def _parse_geometry_from_wkt(geometry_wkt):
     try:
         geometry = wkt.loads(geometry_wkt)
     except ReadingError:
-        raise DataTypeError('WKT not parseable (%s)' % geometry_wkt)
+        raise DataTypeError('wkt not parseable (%s)' % geometry_wkt)
     try:
         geometry_type_id = GEOMETRY_TYPE_ID_BY_TYPE[geometry.type]
     except KeyError:
-        raise DataTypeError('Geometry type not supported (%s)' % geometry.type)
+        raise DataTypeError('geometry type not supported (%s)' % geometry.type)
     geometry_xys = get_lists_from_tuples(mapping(geometry)['coordinates'])
     return geometry_type_id, geometry_xys
 
@@ -276,14 +276,14 @@ def _get_rgb_array(x):
     try:
         return np.array(colorConverter.to_rgb(x))
     except ValueError:
-        raise DataTypeError('Could not parse color (%s)' % x)
+        raise DataTypeError('could not parse color (%s)' % x)
 
 
 def _get_hex_array(color_scheme):
     try:
         return HEX_ARRAY_BY_COLOR_SCHEME[color_scheme]
     except KeyError:
-        raise DataTypeError('Color scheme not supported (%s)' % color_scheme)
+        raise DataTypeError('color scheme not supported (%s)' % color_scheme)
 
 
 def _get_radius_transform(table, geometry_column_names):

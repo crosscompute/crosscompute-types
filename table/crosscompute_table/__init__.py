@@ -29,7 +29,7 @@ class TableType(DataType):
             table.to_excel(path)
         else:
             raise DataTypeError(
-                'File format not supported (%s)' % get_file_extension(path))
+                'file format not supported (%s)' % get_file_extension(path))
 
     @classmethod
     def load(Class, path):
@@ -46,7 +46,7 @@ class TableType(DataType):
             table = pandas.read_excel(path)
         else:
             raise DataTypeError(
-                'File format not supported (%s)' % get_file_extension(path))
+                'file format not supported (%s)' % get_file_extension(path))
         return table
 
     @classmethod

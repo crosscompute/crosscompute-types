@@ -1,23 +1,19 @@
-from crosscompute.tests import run
-from os.path import abspath, dirname
+from crosscompute.tests import run, serve_bad_request
 
 
-TOOL_FOLDER = dirname(abspath(__file__))
+def test_good_input():
+    r = run('load-integer', {'x_integer': 2})
+    r['standard_outputs']['xx_integer'] == 4
 
 
-def test_run_with_good_integer_input():
-    standard_output = run(TOOL_FOLDER, 'load-integer', {'x_integer': 2})[0]
-    assert 'xx_integer = 4' in standard_output
+def test_bad_input():
+    errors = serve_bad_request('load-integer', {'x_integer': 'abc'})
+    assert 'x_integer' in errors
 
 
-def test_run_with_bad_integer_input():
-    standard_output = run(TOOL_FOLDER, 'load-integer', {'x_integer': 'abc'})[0]
-    assert 'x_integer.error' in standard_output
-
-
-def test_run_with_bad_integer_output():
-    standard_output = run(TOOL_FOLDER, 'save-bad-integer')[0]
-    assert 'z_integer.error' in standard_output
+def test_bad_output():
+    r = run('save-bad-integer')
+    assert 'z_integer.error' in r['type_errors']
 
 
 if __name__ == '__main__':
