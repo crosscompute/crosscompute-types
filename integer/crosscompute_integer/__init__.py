@@ -12,20 +12,20 @@ class IntegerType(DataType):
     @classmethod
     def save(Class, path, integer):
         if path.endswith('.msg'):
-            msgpack.pack(integer, open(path, 'wb'))
+            msgpack.pack(integer, open(path, 'w'))
         elif path.endswith('.json'):
-            json.dump(integer, open(path, 'wt'))
+            json.dump(integer, open(path, 'w'))
         else:
-            open(path, 'wt').write(str(integer))
+            open(path, 'w').write(str(integer))
 
     @classmethod
     def load(Class, path):
         if path.endswith('.msg'):
-            integer = msgpack.unpack(open(path, 'rb'))
+            integer = msgpack.unpack(open(path))
         elif path.endswith('.json'):
-            integer = json.load(open(path, 'rt'))
+            integer = json.load(open(path))
         else:
-            integer = Class.parse(open(path, 'rt').read())
+            integer = Class.parse(open(path).read())
         return integer
 
     @classmethod
