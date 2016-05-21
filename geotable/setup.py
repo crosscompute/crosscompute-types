@@ -11,7 +11,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'CHANGES.rst', 'README.rst'])
 setup(
     name='crosscompute-geotable',
-    version='0.0.3',
+    version='0.5.0',
     description='Geotable data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -23,14 +23,14 @@ setup(
     author='Roy Hyunjin Han',
     author_email='rhh@crosscompute.com',
     url='https://crosscompute.com/docs',
-    keywords='web pyramid pylons invisibleroads crosscompute',
+    keywords='web pyramid pylons crosscompute',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.4.5',
-        'crosscompute_table>=0.3.4',
-        'invisibleroads_macros>=0.6.8',
+        'crosscompute>=0.5.0',
+        'crosscompute_table>=0.5.0',
+        'invisibleroads_macros>=0.6.9',
         'matplotlib',
         'numpy>=1.11.0',
         'pandas>=0.18.0',

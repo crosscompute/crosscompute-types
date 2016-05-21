@@ -11,7 +11,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-table',
-    version='0.3.4',
+    version='0.5.0',
     description='Table data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -23,7 +23,7 @@ setup(
     author='Roy Hyunjin Han',
     author_email='rhh@crosscompute.com',
     url='https://crosscompute.com/docs',
-    keywords='web pyramid pylons invisibleroads crosscompute',
+    keywords='web pyramid pylons crosscompute',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
@@ -31,7 +31,7 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
-        'crosscompute>=0.4.5',
+        'crosscompute>=0.5.0',
         'numpy>=1.11.0',
         'pandas>=0.18.0',
     ],
