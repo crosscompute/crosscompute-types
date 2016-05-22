@@ -32,8 +32,7 @@ setup(
     ],
     install_requires=[
         'crosscompute>=0.5.0',
-        'numpy>=1.11.0',
-        'pandas>=0.18.0',
+        'six',
     ],
     tests_require=[
         'pytest',

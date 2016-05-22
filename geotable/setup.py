@@ -32,8 +32,5 @@ setup(
         'crosscompute_table>=0.5.0',
         'invisibleroads_macros>=0.6.9',
         'matplotlib',
-        'numpy>=1.11.0',
-        'pandas>=0.18.0',
-        'shapely>=1.5.15',
     ],
     entry_points=ENTRY_POINTS)

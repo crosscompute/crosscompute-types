@@ -1,10 +1,11 @@
-import pandas
 from invisibleroads_macros.disk import get_file_extension
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
 from crosscompute.types import DataType
 from io import StringIO
 from os.path import exists
+
+from .fallbacks import pandas
 
 
 class TableType(DataType):

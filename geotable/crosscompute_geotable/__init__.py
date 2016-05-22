@@ -1,30 +1,18 @@
-import geometryIO
-import numpy as np
-import pandas
 import re
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
 from crosscompute_table import TableType
-from invisibleroads_macros.iterable import get_lists_from_tuples
 from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
-from matplotlib.colors import colorConverter, rgb2hex
 from os.path import exists
-from shapely import wkt
-from shapely.geometry import mapping
-from shapely.geos import ReadingError
 from types import MethodType
 
+from .fallbacks import array, colorConverter
 
-GEOMETRY_TYPE_ID_BY_TYPE = {
-    'Point': 1,
-    'LineString': 2,
-    'Polygon': 3,
-    'MultiPoint': 4,
-    'MultiLineString': 5,
-    'MultiPolygon': 6,
-}
+
+WKT_PATTERN = re.compile(r'([A-Za-z]+)\s*\(([0-9 ,()]*)\)')
+# These color schemes are courtesy of http://colorbrewer2.org
 HEX_ARRAY_BY_COLOR_SCHEME = {
     'bugn': [
         '#f7fcfd', '#e5f5f9', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76',
@@ -119,13 +107,15 @@ HEX_ARRAY_BY_COLOR_SCHEME = {
     'set3': [
         '#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462',
         '#b3de69', '#fccde5', '#d9d9d9'],
-}  # http://colorbrewer2.org
+}
 SUMMARY_TYPE_EXPRESSION = r'(?: from (mean|sum))?'
 FILL_COLOR_COLUMN_PATTERN = re.compile(r'fill (color|%s)' % '|'.join(
     HEX_ARRAY_BY_COLOR_SCHEME) + SUMMARY_TYPE_EXPRESSION)
 RADIUS_COLUMN_PATTERN = re.compile(
     r'radius in (pixels|meters)'
     r'(?: (range) (\d+) (\d+))?' + SUMMARY_TYPE_EXPRESSION)
+TRANSFORMS = [
+]
 
 
 class GeotableType(TableType):
@@ -143,6 +133,8 @@ class GeotableType(TableType):
         if not exists(path):
             raise IOError
         if path.endswith('.zip'):
+            import geometryIO
+            from crosscompute_table import pandas as pd
             [
                 proj4,
                 geometries,
@@ -153,13 +145,13 @@ class GeotableType(TableType):
             normalize_geometry = geometryIO.get_transformGeometry(proj4)
             geometries = [normalize_geometry(x) for x in geometries]
             # Generate table
-            table = pandas.DataFrame(
+            table = pd.DataFrame(
                 field_packs, columns=[x[0] for x in field_definitions])
             table['WKT'] = [x.wkt for x in geometries]
         else:
             table = super(GeotableType, Class).load(path)
         # TODO: Consider whether there is a better way to do this
-        table.interpret = MethodType(_interpret, table, pandas.DataFrame)
+        table.interpret = MethodType(_interpret, table, table.__class__)
         return table
 
 
@@ -229,15 +221,21 @@ def is_longitude(column_name):
 
 def _parse_geometry_from_wkt(geometry_wkt):
     try:
-        geometry = wkt.loads(geometry_wkt)
-    except ReadingError:
+        geometry_type, xys_string = WKT_PATTERN.match(geometry_wkt).groups()
+    except AttributeError:
         raise DataTypeError('wkt not parseable (%s)' % geometry_wkt)
-    try:
-        geometry_type_id = GEOMETRY_TYPE_ID_BY_TYPE[geometry.type]
-    except KeyError:
-        raise DataTypeError('geometry type not supported (%s)' % geometry.type)
-    geometry_xys = get_lists_from_tuples(mapping(geometry)['coordinates'])
-    return geometry_type_id, geometry_xys
+    geometry_type = geometry_type.upper()
+    if geometry_type not in ('POINT', 'LINESTRING'):
+        raise DataTypeError('geometry type not supported (%s)' % geometry_type)
+    geometry_xys = []
+    for xy_string in xys_string.split(','):
+        x, y = xy_string.strip().split(' ')
+        try:
+            x, y = int(x), int(y)
+        except ValueError:
+            x, y = float(x), float(y)
+        geometry_xys.append((x, y))
+    return geometry_type, geometry_xys
 
 
 def _parse_point_from_tuple(point_xy):
@@ -253,7 +251,7 @@ def _get_fill_color_transform(table, geometry_column_names):
     local_property_name = 'fillColor'
     if color_scheme == 'color':
         summarize = _define_summarize_colors(summary_type or 'mean')
-        normalize = rgb2hex
+        normalize = _get_hex
     else:
         hex_array = _get_hex_array(color_scheme)
         summarize = _define_summarize_numbers(summary_type or 'sum')
@@ -272,11 +270,9 @@ def _get_fill_color_transform(table, geometry_column_names):
         column_name, local_property_name, normalize, summarize)
 
 
-def _get_rgb_array(x):
-    try:
-        return np.array(colorConverter.to_rgb(x))
-    except ValueError:
-        raise DataTypeError('could not parse color (%s)' % x)
+def _get_hex(rgb):
+    # Adapted from matplotlib.colors.rgb2hex
+    return '#%02x%02x%02x' % tuple(int(round(val * 255)) for val in rgb[:3])
 
 
 def _get_hex_array(color_scheme):
@@ -310,7 +306,7 @@ def _prepare_column_name(pattern, column_names):
 
 
 def _get_summary_domain(table, geometry_column_names, column_name, summarize):
-    x_min, x_max = np.inf, -np.inf
+    x_min, x_max = float('inf'), -float('inf')
     for geometry_value, local_table in table.groupby(geometry_column_names):
         x = summarize(local_table[column_name])
         if x < x_min:
@@ -321,6 +317,12 @@ def _get_summary_domain(table, geometry_column_names, column_name, summarize):
 
 
 def _define_summarize_colors(summary_type):
+
+    def _get_rgb_array(x):
+        try:
+            return array(colorConverter.to_rgb(x))
+        except ValueError:
+            raise DataTypeError('could not parse color (%s)' % x)
 
     def summarize(string_series):
         rgb_arrays = string_series.apply(_get_rgb_array)
