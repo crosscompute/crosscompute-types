@@ -11,7 +11,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-image',
-    version='0.5.1',
+    version='0.5.2',
     description='Image data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -28,6 +28,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.5.1',
+        'crosscompute>=0.5.2',
     ],
     entry_points=ENTRY_POINTS)

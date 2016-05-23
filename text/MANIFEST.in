@@ -1,2 +1,2 @@
 include *.cfg *.rst
-recursive-include crosscompute_text *.jinja2
+recursive-include crosscompute_text *.css *.js *.jinja2

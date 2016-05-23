@@ -1,2 +1,2 @@
 include *.cfg *.rst
-recursive-include crosscompute_geotable *.jinja2
+recursive-include crosscompute_geotable *.css *.js *.jinja2
