@@ -25,13 +25,15 @@ RGB_BY_NAME['white'] = RGB_BY_NAME['w']
 class ColorConverter(object):
 
     def to_rgb(self, x):
-        try:
-            return RGB_BY_NAME[x]
-        except KeyError:
-            raise ValueError('could not parse color (%s)' % x)
         if x.startswith('#'):
             return _hex2rgb(x)
-        x_float = float(x)
+        try:
+            x_float = float(x)
+        except ValueError:
+            try:
+                return RGB_BY_NAME[x]
+            except KeyError:
+                raise ValueError('could not parse color (%s)' % x)
         if x_float < 0 or x_float > 1:
             raise ValueError('gray value must be between 0 and 1 (%s)' % x)
         return (x_float,) * 3
