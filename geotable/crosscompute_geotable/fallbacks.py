@@ -25,11 +25,11 @@ RGB_BY_NAME['white'] = RGB_BY_NAME['w']
 class ColorConverter(object):
 
     def to_rgb(self, x):
-        if x.startswith('#'):
-            return _hex2rgb(x)
         try:
             x_float = float(x)
         except ValueError:
+            if x.startswith('#'):
+                return _hex2rgb(x)
             try:
                 return RGB_BY_NAME[x]
             except KeyError:
