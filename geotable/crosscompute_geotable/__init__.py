@@ -181,14 +181,15 @@ def _interpret(table):
 
     for geometry_value, local_table in table.groupby(
             geometry_column_names):
-        geometry_type_id, geometry_xys = parse_geometry(geometry_value)
+        geometry_type_id, geometry_coordinates = parse_geometry(geometry_value)
         local_properties = {}
         for transform in transforms:
             local_properties, local_table = transform(
                 local_properties, local_table)
         local_table = local_table.drop(geometry_column_names, axis=1)
         items.append((
-            geometry_type_id, geometry_xys, local_properties, local_table))
+            geometry_type_id, geometry_coordinates, local_properties,
+            local_table))
     return items, properties
 
 
@@ -232,15 +233,17 @@ def _parse_geometry_from_wkt(geometry_wkt):
         }[geometry_type]
     except KeyError:
         raise DataTypeError('geometry type not supported (%s)' % geometry_type)
-    geometry_xys = []
+    geometry_coordinates = []
     for xy_string in xys_string.split(','):
         x, y = xy_string.strip().split(' ')
         try:
             x, y = int(x), int(y)
         except ValueError:
             x, y = float(x), float(y)
-        geometry_xys.append([x, y])
-    return geometry_type_id, geometry_xys
+        geometry_coordinates.append([x, y])
+    if geometry_type_id == 1:
+        geometry_coordinates = geometry_coordinates[0]
+    return geometry_type_id, geometry_coordinates
 
 
 def _parse_point_from_tuple(point_xy):
