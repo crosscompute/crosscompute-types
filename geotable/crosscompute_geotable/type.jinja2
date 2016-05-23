@@ -7,14 +7,16 @@
 
 {% macro head_script_inline() %}
 var v = d.crosscompute.geotable = {};
-v.mapbox_token = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ') }}';
 v.definitions = {};
 {% endmacro %}
 
 {% macro body_script_loaded() %}
 <script src='//api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
 {% endmacro %}
-{% macro body_script_inline() %}{% endmacro %}
+{% macro body_script_inline() %}
+L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ') }}';
+$.each(d.crosscompute.geotable.definitions, draw_map);
+{% endmacro %}
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}

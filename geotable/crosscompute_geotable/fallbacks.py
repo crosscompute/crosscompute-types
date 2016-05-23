@@ -29,14 +29,29 @@ class ColorConverter(object):
             return RGB_BY_NAME[x]
         except KeyError:
             raise ValueError('could not parse color (%s)' % x)
+        if x.startswith('#'):
+            return _hex2rgb(x)
+        x_float = float(x)
+        if x_float < 0 or x_float > 1:
+            raise ValueError('gray value must be between 0 and 1 (%s)' % x)
+        return (x_float,) * 3
+
+
+def _hex2rgb(x):
+    return tuple([int(n, 16) / 255. for n in (x[1:3], x[3:5], x[5:7])])
+
+
+def _rgb2hex(x):
+    return '#%02x%02x%02x' % tuple(int(round(val * 255)) for val in x[:3])
 
 
 try:
-    from matplotlib.colors import colorConverter
+    from matplotlib.colors import colorConverter, rgb2hex
     from numpy import array
 except ImportError:
     from crosscompute_table._pandas import Array
     colorConverter = ColorConverter()
+    rgb2hex = _rgb2hex
     array = Array
     print('Please install matplotlib for full color support')
 try:

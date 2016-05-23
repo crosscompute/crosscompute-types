@@ -60,7 +60,10 @@ class DataFrame(object):
         if isinstance(key, slice):
             return DataFrame(
                 self.values[key.start:key.stop:key.step], self.columns)
-        return self.values[key]
+        if isinstance(key, int):
+            return self.values[key]
+        column_index = self.columns.index(key)
+        return Series([x[column_index] for x in self.values])
 
     def __len__(self):
         return len(self.values)

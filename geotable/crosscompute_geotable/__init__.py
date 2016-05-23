@@ -8,10 +8,10 @@ from math import floor
 from os.path import exists
 from types import MethodType
 
-from .fallbacks import array, colorConverter
+from .fallbacks import array, colorConverter, rgb2hex
 
 
-WKT_PATTERN = re.compile(r'([A-Za-z]+)\s*\(([0-9 ,()]*)\)')
+WKT_PATTERN = re.compile(r'([A-Za-z]+)\s*\(([0-9 -.,()]*)\)')
 # These color schemes are courtesy of http://colorbrewer2.org
 HEX_ARRAY_BY_COLOR_SCHEME = {
     'bugn': [
@@ -225,7 +225,12 @@ def _parse_geometry_from_wkt(geometry_wkt):
     except AttributeError:
         raise DataTypeError('wkt not parseable (%s)' % geometry_wkt)
     geometry_type = geometry_type.upper()
-    if geometry_type not in ('POINT', 'LINESTRING'):
+    try:
+        geometry_type_id = {
+            'POINT': 1,
+            'LINESTRING': 2,
+        }[geometry_type]
+    except KeyError:
         raise DataTypeError('geometry type not supported (%s)' % geometry_type)
     geometry_xys = []
     for xy_string in xys_string.split(','):
@@ -234,8 +239,8 @@ def _parse_geometry_from_wkt(geometry_wkt):
             x, y = int(x), int(y)
         except ValueError:
             x, y = float(x), float(y)
-        geometry_xys.append((x, y))
-    return geometry_type, geometry_xys
+        geometry_xys.append([x, y])
+    return geometry_type_id, geometry_xys
 
 
 def _parse_point_from_tuple(point_xy):
@@ -251,7 +256,7 @@ def _get_fill_color_transform(table, geometry_column_names):
     local_property_name = 'fillColor'
     if color_scheme == 'color':
         summarize = _define_summarize_colors(summary_type or 'mean')
-        normalize = _get_hex
+        normalize = rgb2hex
     else:
         hex_array = _get_hex_array(color_scheme)
         summarize = _define_summarize_numbers(summary_type or 'sum')
@@ -268,11 +273,6 @@ def _get_fill_color_transform(table, geometry_column_names):
 
     return _define_transform(
         column_name, local_property_name, normalize, summarize)
-
-
-def _get_hex(rgb):
-    # Adapted from matplotlib.colors.rgb2hex
-    return '#%02x%02x%02x' % tuple(int(round(val * 255)) for val in rgb[:3])
 
 
 def _get_hex_array(color_scheme):
