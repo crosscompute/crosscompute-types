@@ -141,9 +141,12 @@ class GeotableType(TableType):
                 field_packs,
                 field_definitions,
             ] = geometryIO.load(path)
-            # Convert to LL
+            # Convert to (longitude, latitude)
             normalize_geometry = geometryIO.get_transformGeometry(proj4)
             geometries = [normalize_geometry(x) for x in geometries]
+            # Convert to (latitude, longitude)
+            for geometry in geometries:
+                geometry.coords = [_flip_xy(xyz) for xyz in geometry.coords]
             # Generate table
             table = pd.DataFrame(
                 field_packs, columns=[x[0] for x in field_definitions])
@@ -201,7 +204,7 @@ def get_geometry_column_names(column_names):
     latitude_column_names = filter(is_latitude, column_names)
     longitude_column_names = filter(is_longitude, column_names)
     if latitude_column_names and longitude_column_names:
-        # Use ISO 6709 coordinate order
+        # Use ISO 6709 coordinate order: (latitude, longitude)
         return [latitude_column_names[0], longitude_column_names[0]]
 
 
@@ -350,3 +353,10 @@ def _define_transform(column_name, local_property_name, normalize, summarize):
         return local_properties, local_table
 
     return transform
+
+
+def _flip_xy(xyz):
+    'Flip x and y coordinates whether or not there is a z-coordinate'
+    xyz = list(xyz)  # Preserve original
+    xyz[0], xyz[1] = xyz[1], xyz[0]
+    return xyz

@@ -20,14 +20,14 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
         'License :: OSI Approved :: MIT License',
     ],
-    author='Roy Hyunjin Han',
-    author_email='rhh@crosscompute.com',
+    author='CrossCompute Inc',
+    author_email='support@crosscompute.com',
     url='https://crosscompute.com/docs',
     keywords='web pyramid pylons crosscompute',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.5.2',
+        'crosscompute>=0.5.3',
     ],
     entry_points=ENTRY_POINTS)

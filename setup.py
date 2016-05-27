@@ -1,18 +1,14 @@
 from os.path import abspath, dirname, join
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
-ENTRY_POINTS = """
-[crosscompute.types]
-text = crosscompute_text:TextType
-"""
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
-    name='crosscompute-text',
-    version='0.5.2',
-    description='Text data type plugin for CrossCompute',
+    name='crosscompute-types',
+    version='0.5.3',
+    description='Default data type plugins for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
@@ -24,10 +20,11 @@ setup(
     author_email='support@crosscompute.com',
     url='https://crosscompute.com/docs',
     keywords='web pyramid pylons crosscompute',
-    packages=find_packages(),
-    include_package_data=True,
-    zip_safe=False,
+    zip_safe=True,
     install_requires=[
-        'crosscompute>=0.5.3',
-    ],
-    entry_points=ENTRY_POINTS)
+        'crosscompute-integer>=0.5.2',
+        'crosscompute-text>=0.5.2',
+        'crosscompute-image>=0.5.2',
+        'crosscompute-table>=0.5.3.1',
+        'crosscompute-geotable>=0.5.3.3',
+    ])
