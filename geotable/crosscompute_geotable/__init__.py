@@ -6,7 +6,7 @@ from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
 from os.path import exists
-from types import MethodType
+from six import create_bound_method
 
 from .fallbacks import array, colorConverter, rgb2hex
 
@@ -154,7 +154,7 @@ class GeotableType(TableType):
         else:
             table = super(GeotableType, Class).load(path)
         # TODO: Consider whether there is a better way to do this
-        table.interpret = MethodType(_interpret, table, table.__class__)
+        table.interpret = create_bound_method(_interpret, table)
         return table
 
 
@@ -197,12 +197,12 @@ def _interpret(table):
 
 
 def get_geometry_column_names(column_names):
-    wkt_column_names = filter(is_wkt, column_names)
+    wkt_column_names = [x for x in column_names if is_wkt(x)]
     if wkt_column_names:
         # Assume WKT coordinate order is (latitude, longitude)
         return [wkt_column_names[0]]
-    latitude_column_names = filter(is_latitude, column_names)
-    longitude_column_names = filter(is_longitude, column_names)
+    latitude_column_names = [x for x in column_names if is_latitude(x)]
+    longitude_column_names = [x for x in column_names if is_longitude(x)]
     if latitude_column_names and longitude_column_names:
         # Use ISO 6709 coordinate order: (latitude, longitude)
         return [latitude_column_names[0], longitude_column_names[0]]
