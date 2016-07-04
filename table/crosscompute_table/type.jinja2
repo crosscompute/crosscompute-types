@@ -1,4 +1,4 @@
-{% from 'invisibleroads_uploads:templates/parts.jinja2' import render_upload_button %}
+{% from 'invisibleroads_uploads:templates/parts.jinja2' import upload_button %}
 
 {% macro head_style_loaded() %}{% endmacro %}
 {% macro head_style_inline() %}{% endmacro %}
@@ -8,7 +8,7 @@
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
-<div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg table-upload') }}</div>
+<div data-name="{{ key }}">{{ upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg table-upload') }}</div>
 <div id="{{ key }}-upload">{{ render_property(data_item, class='editable-table') }}</div>
 <input name="{{ key }}-csv" type="hidden">
 {% endmacro %}

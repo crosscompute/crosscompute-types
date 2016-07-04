@@ -1,4 +1,4 @@
-{% from 'invisibleroads_uploads:templates/parts.jinja2' import render_upload_button %}
+{% from 'invisibleroads_uploads:templates/parts.jinja2' import upload_button %}
 
 {% macro head_style_loaded() %}
 <link rel="stylesheet" href="//api.mapbox.com/mapbox.js/v2.4.0/mapbox.css">
@@ -21,7 +21,7 @@ $.each(g.crosscompute.geotable.definitions, draw_map);
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
-<div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg geotable-upload') }}</div>
+<div data-name="{{ key }}">{{ upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg geotable-upload') }}</div>
 <div id="{{ key }}-upload">{{ render_property(data_item) }}</div>
 <input name="{{ key }}-upload" type="hidden">
 {% endmacro %}
