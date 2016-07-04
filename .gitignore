@@ -12,6 +12,7 @@
 build
 dist
 # Sass
+*.css.map
 .sass-cache
 # Transient
 *.log

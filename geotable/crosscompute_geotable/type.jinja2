@@ -6,16 +6,17 @@
 {% macro head_style_inline() %}{% endmacro %}
 
 {% macro head_script_inline() %}
-var v = d.crosscompute.geotable = {};
-v.definitions = {};
+l = g.crosscompute.geotable = {};
+l.definitions = {};
 {% endmacro %}
 
 {% macro body_script_loaded() %}
 <script src='//api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
 {% endmacro %}
+
 {% macro body_script_inline() %}
 L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ') }}';
-$.each(d.crosscompute.geotable.definitions, draw_map);
+$.each(g.crosscompute.geotable.definitions, draw_map);
 {% endmacro %}
 
 {% macro render_argument(data_item) %}
@@ -42,7 +43,7 @@ $.each(d.crosscompute.geotable.definitions, draw_map);
 {% endfor %}
 </table>
 <script>
-d.crosscompute.geotable.definitions['{{ key }}'] = [[
+g.crosscompute.geotable.definitions['{{ key }}'] = [[
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
 [{{ geometry_type_id }}, {{ geometry_coordinates }}, {
 {%- for k, v in local_properties.items() %}
