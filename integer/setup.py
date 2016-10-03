@@ -31,7 +31,7 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
-        'crosscompute>=0.5.3',
+        'crosscompute>=0.5.4',
         'msgpack-python',
         'simplejson',
     ],

@@ -2,6 +2,7 @@ import re
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
 from crosscompute_table import TableType
+from invisibleroads_macros.geometry import flip_geometry_coordinates
 from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
@@ -12,6 +13,7 @@ from .fallbacks import array, colorConverter, rgb2hex
 
 
 WKT_PATTERN = re.compile(r'([A-Za-z]+)\s*\(([0-9 -.,()]*)\)')
+SEQUENCE_PATTERN = re.compile(r'\(([0-9 -.,()]*?)\)')
 # These color schemes are courtesy of http://colorbrewer2.org
 HEX_ARRAY_BY_COLOR_SCHEME = {
     'bugn': [
@@ -145,12 +147,11 @@ class GeotableType(TableType):
             normalize_geometry = geometryIO.get_transformGeometry(proj4)
             geometries = [normalize_geometry(x) for x in geometries]
             # Convert to (latitude, longitude)
-            for geometry in geometries:
-                geometry.coords = [_flip_xy(xyz) for xyz in geometry.coords]
+            flipped_geometries = flip_geometry_coordinates(geometries)
             # Generate table
             table = pd.DataFrame(
                 field_packs, columns=[x[0] for x in field_definitions])
-            table['WKT'] = [x.wkt for x in geometries]
+            table['WKT'] = [x.wkt for x in flipped_geometries]
         else:
             table = super(GeotableType, Class).load(path)
         # TODO: Consider whether there is a better way to do this
@@ -233,9 +234,22 @@ def _parse_geometry_from_wkt(geometry_wkt):
         geometry_type_id = {
             'POINT': 1,
             'LINESTRING': 2,
+            'MULTILINESTRING': 3,
         }[geometry_type]
     except KeyError:
         raise DataTypeError('geometry type not supported (%s)' % geometry_type)
+    if geometry_type_id == 1:
+        geometry_coordinates = _parse_geometry_coordinates(xys_string)[0]
+    elif geometry_type_id == 2:
+        geometry_coordinates = _parse_geometry_coordinates(xys_string)
+    else:
+        xys_strings = SEQUENCE_PATTERN.findall(xys_string)
+        geometry_coordinates = [
+            _parse_geometry_coordinates(_) for _ in xys_strings]
+    return geometry_type_id, geometry_coordinates
+
+
+def _parse_geometry_coordinates(xys_string):
     geometry_coordinates = []
     for xy_string in xys_string.split(','):
         x, y = xy_string.strip().split(' ')
@@ -244,9 +258,7 @@ def _parse_geometry_from_wkt(geometry_wkt):
         except ValueError:
             x, y = float(x), float(y)
         geometry_coordinates.append([x, y])
-    if geometry_type_id == 1:
-        geometry_coordinates = geometry_coordinates[0]
-    return geometry_type_id, geometry_coordinates
+    return geometry_coordinates
 
 
 def _parse_point_from_tuple(point_xy):
@@ -353,10 +365,3 @@ def _define_transform(column_name, local_property_name, normalize, summarize):
         return local_properties, local_table
 
     return transform
-
-
-def _flip_xy(xyz):
-    'Flip x and y coordinates whether or not there is a z-coordinate'
-    xyz = list(xyz)  # Preserve original
-    xyz[0], xyz[1] = xyz[1], xyz[0]
-    return xyz

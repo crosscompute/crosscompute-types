@@ -1,4 +1,4 @@
-{% from 'invisibleroads_uploads:templates/parts.jinja2' import render_upload_button %}
+{% from 'invisibleroads_uploads:templates/parts.jinja2' import upload_button %}
 
 {% macro head_style_loaded() %}
 <link rel="stylesheet" href="//api.mapbox.com/mapbox.js/v2.4.0/mapbox.css">
@@ -6,8 +6,8 @@
 {% macro head_style_inline() %}{% endmacro %}
 
 {% macro head_script_inline() %}
-l = g.crosscompute.geotable = {};
-l.definitions = {};
+x = CC.geotable = {};
+x.definitions = {};
 {% endmacro %}
 
 {% macro body_script_loaded() %}
@@ -16,12 +16,12 @@ l.definitions = {};
 
 {% macro body_script_inline() %}
 L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ') }}';
-$.each(g.crosscompute.geotable.definitions, draw_map);
+$.each(CC.geotable.definitions, draw_map);
 {% endmacro %}
 
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
-<div data-name="{{ key }}">{{ render_upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg geotable-upload') }}</div>
+<div data-name="{{ key }}">{{ upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg geotable-upload') }}</div>
 <div id="{{ key }}-upload">{{ render_property(data_item) }}</div>
 <input name="{{ key }}-upload" type="hidden">
 {% endmacro %}
@@ -43,7 +43,7 @@ $.each(g.crosscompute.geotable.definitions, draw_map);
 {% endfor %}
 </table>
 <script>
-g.crosscompute.geotable.definitions['{{ key }}'] = [[
+CC.geotable.definitions['{{ key }}'] = [[
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
 [{{ geometry_type_id }}, {{ geometry_coordinates }}, {
 {%- for k, v in local_properties.items() %}
