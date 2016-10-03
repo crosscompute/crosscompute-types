@@ -2,6 +2,7 @@ import re
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
 from crosscompute_table import TableType
+from invisibleroads_macros.geometry import flip_geometry_coordinates
 from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
@@ -145,12 +146,11 @@ class GeotableType(TableType):
             normalize_geometry = geometryIO.get_transformGeometry(proj4)
             geometries = [normalize_geometry(x) for x in geometries]
             # Convert to (latitude, longitude)
-            for geometry in geometries:
-                geometry.coords = [_flip_xy(xyz) for xyz in geometry.coords]
+            flipped_geometries = flip_geometry_coordinates(geometries)
             # Generate table
             table = pd.DataFrame(
                 field_packs, columns=[x[0] for x in field_definitions])
-            table['WKT'] = [x.wkt for x in geometries]
+            table['WKT'] = [x.wkt for x in flipped_geometries]
         else:
             table = super(GeotableType, Class).load(path)
         # TODO: Consider whether there is a better way to do this
@@ -353,10 +353,3 @@ def _define_transform(column_name, local_property_name, normalize, summarize):
         return local_properties, local_table
 
     return transform
-
-
-def _flip_xy(xyz):
-    'Flip x and y coordinates whether or not there is a z-coordinate'
-    xyz = list(xyz)  # Preserve original
-    xyz[0], xyz[1] = xyz[1], xyz[0]
-    return xyz
