@@ -28,6 +28,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.5.4.1',
+        'crosscompute>=0.5.4.2',
     ],
     entry_points=ENTRY_POINTS)

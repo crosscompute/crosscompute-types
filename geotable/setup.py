@@ -28,8 +28,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.5.4.1',
-        'crosscompute_table>=0.5.3.3',
+        'crosscompute>=0.5.4.2',
+        'crosscompute_table>=0.5.3.4',
         'invisibleroads_macros>=0.7.1',
     ],
     entry_points=ENTRY_POINTS)
