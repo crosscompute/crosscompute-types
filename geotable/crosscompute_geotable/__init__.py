@@ -13,6 +13,7 @@ from .fallbacks import array, colorConverter, rgb2hex
 
 
 WKT_PATTERN = re.compile(r'([A-Za-z]+)\s*\(([0-9 -.,()]*)\)')
+SEQUENCE_PATTERN = re.compile(r'\(([0-9 -.,()]*?)\)')
 # These color schemes are courtesy of http://colorbrewer2.org
 HEX_ARRAY_BY_COLOR_SCHEME = {
     'bugn': [
@@ -233,9 +234,22 @@ def _parse_geometry_from_wkt(geometry_wkt):
         geometry_type_id = {
             'POINT': 1,
             'LINESTRING': 2,
+            'MULTILINESTRING': 3,
         }[geometry_type]
     except KeyError:
         raise DataTypeError('geometry type not supported (%s)' % geometry_type)
+    if geometry_type_id == 1:
+        geometry_coordinates = _parse_geometry_coordinates(xys_string)[0]
+    elif geometry_type_id == 2:
+        geometry_coordinates = _parse_geometry_coordinates(xys_string)
+    else:
+        xys_strings = SEQUENCE_PATTERN.findall(xys_string)
+        geometry_coordinates = [
+            _parse_geometry_coordinates(_) for _ in xys_strings]
+    return geometry_type_id, geometry_coordinates
+
+
+def _parse_geometry_coordinates(xys_string):
     geometry_coordinates = []
     for xy_string in xys_string.split(','):
         x, y = xy_string.strip().split(' ')
@@ -244,9 +258,7 @@ def _parse_geometry_from_wkt(geometry_wkt):
         except ValueError:
             x, y = float(x), float(y)
         geometry_coordinates.append([x, y])
-    if geometry_type_id == 1:
-        geometry_coordinates = geometry_coordinates[0]
-    return geometry_type_id, geometry_coordinates
+    return geometry_coordinates
 
 
 def _parse_point_from_tuple(point_xy):
