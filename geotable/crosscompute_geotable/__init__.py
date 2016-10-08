@@ -144,7 +144,8 @@ class GeotableType(TableType):
                 field_definitions,
             ] = geometryIO.load(path)
             # Convert to (longitude, latitude)
-            normalize_geometry = geometryIO.get_transformGeometry(proj4)
+            normalize_geometry = geometryIO.get_transformGeometry(
+                proj4 or geometryIO.proj4LL)
             geometries = [normalize_geometry(x) for x in geometries]
             # Convert to (latitude, longitude)
             flipped_geometries = flip_geometry_coordinates(geometries)
