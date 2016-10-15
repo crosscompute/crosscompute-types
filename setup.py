@@ -23,8 +23,6 @@ setup(
     zip_safe=True,
     install_requires=[
         'crosscompute>=0.5.4.2',
-        'crosscompute-integer>=0.5.2',
-        'crosscompute-text>=0.5.2',
         'crosscompute-image>=0.5.2',
         'crosscompute-table>=0.5.3.4',
         'crosscompute-geotable>=0.5.3.4',

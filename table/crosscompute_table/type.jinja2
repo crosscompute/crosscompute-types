@@ -9,8 +9,8 @@
 {% macro render_argument(data_item) %}
 {% set key = data_item.key %}
 <div data-name="{{ key }}">{{ upload_button(id='%s-upload-button' % key, text='Upload', class='btn-lg table-upload') }}</div>
-<div id="{{ key }}-upload">{{ render_property(data_item, class='editable-table') }}</div>
-<input name="{{ key }}-csv" type="hidden">
+<div id="{{ key }}">{{ render_property(data_item, class='editable-table') }}</div>
+<input name="{{ key }}_csv" type="hidden">
 {% endmacro %}
 
 {% macro render_property(data_item, stamp='', class='') %}
