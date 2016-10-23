@@ -4,15 +4,15 @@ from setuptools import find_packages, setup
 
 ENTRY_POINTS = """
 [crosscompute.types]
-image = crosscompute_image:ImageType
+integer = crosscompute_integer:IntegerType
 """
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
-    name='crosscompute-image',
+    name='crosscompute-integer',
     version='0.5.6',
-    description='Image data type plugin for CrossCompute',
+    description='Integer data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',

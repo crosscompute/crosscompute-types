@@ -4,15 +4,15 @@ from setuptools import find_packages, setup
 
 ENTRY_POINTS = """
 [crosscompute.types]
-image = crosscompute_image:ImageType
+text = crosscompute_text:TextType
 """
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
-    name='crosscompute-image',
+    name='crosscompute-text',
     version='0.5.6',
-    description='Image data type plugin for CrossCompute',
+    description='Text data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
