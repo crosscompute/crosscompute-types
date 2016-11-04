@@ -2,7 +2,8 @@ import re
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
 from crosscompute_table import TableType
-from invisibleroads_macros.geometry import flip_geometry_coordinates
+from invisibleroads_macros.geometry import (
+    drop_z, flip_xy, transform_geometries)
 from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_column_name
 from math import floor
@@ -146,7 +147,8 @@ class GeotableType(TableType):
                 proj4 or geometryIO.proj4LL)
             geometries = [normalize_geometry(x) for x in geometries]
             # Convert to (latitude, longitude)
-            flipped_geometries = flip_geometry_coordinates(geometries)
+            geometries = transform_geometries(geometries, drop_z)
+            geometries = transform_geometries(geometries, flip_xy)
             # Generate table
             table = pd.DataFrame(
                 field_packs, columns=[x[0] for x in field_definitions])
