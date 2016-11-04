@@ -152,7 +152,7 @@ class GeotableType(TableType):
             # Generate table
             table = pd.DataFrame(
                 field_packs, columns=[x[0] for x in field_definitions])
-            table['WKT'] = [x.wkt for x in flipped_geometries]
+            table['WKT'] = [x.wkt for x in geometries]
         else:
             table = super(GeotableType, Class).load(path)
         # TODO: Consider whether there is a better way to do this
