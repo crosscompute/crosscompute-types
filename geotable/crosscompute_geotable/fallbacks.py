@@ -117,13 +117,14 @@ else:
         geometry_type = geometry.type.upper()
         if geometry_type == 'POINT':
             geometry_type_id = 1
-            geometry_coordinates = geometry.coords[0]
+            geometry_coordinates = list(geometry.coords[0][:2])
         elif geometry_type == 'LINESTRING':
             geometry_type_id = 2
-            geometry_coordinates = list(geometry.coords)
+            geometry_coordinates = [list(x[:2]) for x in geometry.coords]
         elif geometry_type == 'MULTILINESTRING':
             geometry_type_id = 3
-            geometry_coordinates = [list(x.coords) for x in geometry.geoms]
+            geometry_coordinates = [[
+                list(x[:2]) for x in geom.coords] for geom in geometry.geoms]
         else:
             raise DataTypeError(
                 'geometry type not supported (%s)' % geometry_type)
