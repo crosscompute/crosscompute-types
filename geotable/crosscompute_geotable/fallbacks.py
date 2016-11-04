@@ -1,3 +1,6 @@
+from crosscompute.exceptions import DataTypeError
+
+
 RGB_BY_NAME = {
     'b': (0.00, 0.00, 1.00),
     'g': (0.00, 0.50, 0.00),
@@ -57,6 +60,71 @@ except ImportError:
     array = Array
     print('Please install matplotlib for full color support')
 try:
-    import geometryIO
+    import geometryIO  # noqa
 except ImportError:
     print('Please install GDAL, shapely, geometryIO for shapefile support')
+
+
+try:
+    from shapely import wkt
+except ImportError:
+    import re
+
+    WKT_PATTERN = re.compile(r'([A-Za-z]+)\s*\(([0-9 -.,()]*)\)')
+    SEQUENCE_PATTERN = re.compile(r'\(([0-9 -.,()]*?)\)')
+
+    def _parse_geometry(geometry_wkt):
+        try:
+            geometry_type, xys_string = WKT_PATTERN.match(
+                geometry_wkt).groups()
+        except AttributeError:
+            raise DataTypeError('wkt not parseable (%s)' % geometry_wkt)
+        geometry_type = geometry_type.upper()
+        try:
+            geometry_type_id = {
+                'POINT': 1,
+                'LINESTRING': 2,
+                'MULTILINESTRING': 3,
+            }[geometry_type]
+        except KeyError:
+            raise DataTypeError(
+                'geometry type not supported (%s)' % geometry_type)
+        if geometry_type_id == 1:
+            geometry_coordinates = _parse_geometry_coordinates(xys_string)[0]
+        elif geometry_type_id == 2:
+            geometry_coordinates = _parse_geometry_coordinates(xys_string)
+        else:
+            xys_strings = SEQUENCE_PATTERN.findall(xys_string)
+            geometry_coordinates = [
+                _parse_geometry_coordinates(_) for _ in xys_strings]
+        return geometry_type_id, geometry_coordinates
+
+    def _parse_geometry_coordinates(xys_string):
+        geometry_coordinates = []
+        for xy_string in xys_string.split(','):
+            x, y = xy_string.strip().split(' ')[:2]
+            try:
+                x, y = int(x), int(y)
+            except ValueError:
+                x, y = float(x), float(y)
+            geometry_coordinates.append([x, y])
+        return geometry_coordinates
+
+    print('Please install shapely for extended geometry support')
+else:
+    def _parse_geometry(geometry_wkt):
+        geometry = wkt.loads(geometry_wkt)
+        geometry_type = geometry.type.upper()
+        if geometry_type == 'POINT':
+            geometry_type_id = 1
+            geometry_coordinates = geometry.coords[0]
+        elif geometry_type == 'LINESTRING':
+            geometry_type_id = 2
+            geometry_coordinates = list(geometry.coords)
+        elif geometry_type == 'MULTILINESTRING':
+            geometry_type_id = 3
+            geometry_coordinates = [list(x.coords) for x in geometry.geoms]
+        else:
+            raise DataTypeError(
+                'geometry type not supported (%s)' % geometry_type)
+        return geometry_type_id, geometry_coordinates

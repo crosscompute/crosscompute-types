@@ -9,11 +9,9 @@ from math import floor
 from os.path import exists
 from six import create_bound_method
 
-from .fallbacks import array, colorConverter, rgb2hex
+from .fallbacks import array, colorConverter, _parse_geometry, rgb2hex
 
 
-WKT_PATTERN = re.compile(r'([A-Za-z]+)\s*\(([0-9 -.,()]*)\)')
-SEQUENCE_PATTERN = re.compile(r'\(([0-9 -.,()]*?)\)')
 # These color schemes are courtesy of http://colorbrewer2.org
 HEX_ARRAY_BY_COLOR_SCHEME = {
     'bugn': [
@@ -173,7 +171,7 @@ def _interpret(table):
     if len(geometry_column_names) > 1:
         parse_geometry = _parse_point_from_tuple
     else:
-        parse_geometry = _parse_geometry_from_wkt
+        parse_geometry = _parse_geometry
     transforms = []
     for get_transform in [
         _get_fill_color_transform,
@@ -223,43 +221,6 @@ def is_latitude(column_name):
 def is_longitude(column_name):
     column_name = column_name.lower()
     return column_name.endswith('longitude') or column_name == 'lon'
-
-
-def _parse_geometry_from_wkt(geometry_wkt):
-    try:
-        geometry_type, xys_string = WKT_PATTERN.match(geometry_wkt).groups()
-    except AttributeError:
-        raise DataTypeError('wkt not parseable (%s)' % geometry_wkt)
-    geometry_type = geometry_type.upper()
-    try:
-        geometry_type_id = {
-            'POINT': 1,
-            'LINESTRING': 2,
-            'MULTILINESTRING': 3,
-        }[geometry_type]
-    except KeyError:
-        raise DataTypeError('geometry type not supported (%s)' % geometry_type)
-    if geometry_type_id == 1:
-        geometry_coordinates = _parse_geometry_coordinates(xys_string)[0]
-    elif geometry_type_id == 2:
-        geometry_coordinates = _parse_geometry_coordinates(xys_string)
-    else:
-        xys_strings = SEQUENCE_PATTERN.findall(xys_string)
-        geometry_coordinates = [
-            _parse_geometry_coordinates(_) for _ in xys_strings]
-    return geometry_type_id, geometry_coordinates
-
-
-def _parse_geometry_coordinates(xys_string):
-    geometry_coordinates = []
-    for xy_string in xys_string.split(','):
-        x, y = xy_string.strip().split(' ')
-        try:
-            x, y = int(x), int(y)
-        except ValueError:
-            x, y = float(x), float(y)
-        geometry_coordinates.append([x, y])
-    return geometry_coordinates
 
 
 def _parse_point_from_tuple(point_xy):
