@@ -281,7 +281,8 @@ def _get_radius_transform(table, geometry_column_names):
 
 def _prepare_column_name(pattern, column_names):
     for column_name in column_names:
-        match = pattern.match(normalize_column_name(column_name))
+        match = pattern.match(normalize_column_name(
+            column_name, separate_camel_case=True, separate_letter_digit=True))
         if match:
             return column_name, match.groups()
     return None, ()
