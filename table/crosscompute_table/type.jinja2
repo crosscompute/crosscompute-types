@@ -17,7 +17,7 @@
 {% set key = data_item.key + stamp %}
 {% set table = data_item.value %}
 <div class="scrollable">
-{% if table is not none %}
+{% if table is not '' %}
 <table id="{{ key }}" class="table {{ class }}">
 <thead>
 <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>

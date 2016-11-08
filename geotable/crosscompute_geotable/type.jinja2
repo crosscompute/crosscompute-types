@@ -28,7 +28,7 @@ $.each(CC.geotable.definitions, draw_map);
 
 {% macro render_property(data_item, stamp='') %}
 {% set key = data_item.key + stamp %}
-{% if data_item.value is not none %}
+{% if data_item.value is not '' %}
 {% set items, properties = data_item.value.interpret() %}
 {% set column_names = items[0][-1].columns if items else [] %}
 <div id="{{ key }}-map" class="geotable-map"></div>
