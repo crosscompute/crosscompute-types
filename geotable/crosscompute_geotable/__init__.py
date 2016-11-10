@@ -5,7 +5,7 @@ from crosscompute_table import TableType
 from invisibleroads_macros.geometry import (
     drop_z, flip_xy, transform_geometries)
 from invisibleroads_macros.math import define_normalize
-from invisibleroads_macros.table import normalize_column_name
+from invisibleroads_macros.table import normalize_key
 from math import floor
 from os.path import exists
 from six import create_bound_method
@@ -281,7 +281,7 @@ def _get_radius_transform(table, geometry_column_names):
 
 def _prepare_column_name(pattern, column_names):
     for column_name in column_names:
-        match = pattern.match(normalize_column_name(
+        match = pattern.match(normalize_key(
             column_name, separate_camel_case=True, separate_letter_digit=True))
         if match:
             return column_name, match.groups()
