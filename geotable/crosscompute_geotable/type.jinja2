@@ -15,7 +15,7 @@ x.definitions = {};
 {% endmacro %}
 
 {% macro body_script_inline() %}
-L.mapbox.accessToken = '{{ get_os_environment_variable('MAPBOX_TOKEN', 'pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ') }}';
+L.mapbox.accessToken = '{{ get_os_environment_variable("MAPBOX_TOKEN", "pk.eyJ1IjoiaW52aXNpYmxlcm9hZHMiLCJhIjoiY2lteHZianlxMDNuN3V3bTRnYjdsZTdycSJ9.xLgWezLxrs7TR11XqONWeQ") }}';
 $.each(CC.geotable.definitions, draw_map);
 {% endmacro %}
 
