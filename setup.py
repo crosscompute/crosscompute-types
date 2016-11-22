@@ -7,7 +7,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-types',
-    version='0.5.6',
+    version='0.6.0',
     description='Default data type plugins for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -22,10 +22,10 @@ setup(
     keywords='web pyramid pylons crosscompute',
     zip_safe=True,
     install_requires=[
-        'crosscompute>=0.5.6',
-        'crosscompute-integer>=0.5.6',
-        'crosscompute-text>=0.5.6',
-        'crosscompute-image>=0.5.6',
-        'crosscompute-table>=0.5.6',
-        'crosscompute-geotable>=0.5.6',
+        'crosscompute>=0.6.0',
+        'crosscompute-integer>=0.6.0',
+        'crosscompute-text>=0.6.0',
+        'crosscompute-image>=0.6.0',
+        'crosscompute-table>=0.6.0',
+        'crosscompute-geotable>=0.6.0',
     ])

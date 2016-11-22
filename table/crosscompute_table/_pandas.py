@@ -1,6 +1,6 @@
 import codecs
-from collections import defaultdict
 import csv
+from collections import defaultdict
 from six import StringIO
 
 
