@@ -23,7 +23,7 @@ class TableType(DataType):
     @classmethod
     def save(Class, path, table):
         if path.endswith('.csv'):
-            table.to_csv(path, index=False)
+            table.to_csv(path, encoding='utf-8', index=False)
         elif path.endswith('.msg'):
             table.to_msgpack(path, compress='blosc')
         elif path.endswith('.json'):
@@ -75,7 +75,7 @@ class TableType(DataType):
     @classmethod
     def format(Class, table, format_name='csv'):
         if format_name == 'csv':
-            return table.to_csv(index=False)
+            return table.to_csv(encoding='utf-8', index=False)
         elif format_name == 'json':
             return table.to_json(orient='split')
 
