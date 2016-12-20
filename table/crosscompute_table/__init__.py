@@ -1,5 +1,4 @@
 import chardet
-import codecs
 from invisibleroads_macros.disk import get_file_extension
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
@@ -43,15 +42,9 @@ class TableType(DataType):
                 table = pandas.read_csv(
                     path, encoding='utf-8', skipinitialspace=True)
             except UnicodeDecodeError:
-                best_encoding = chardet.detect(open(path).read())['encoding']
-                best_alpha_count = 0
-                for encoding in [best_encoding, 'cp850']:
-                    content = codecs.open(path, encoding=encoding).read()
-                    alpha_count = sum(x.isalpha() for x in content)
-                    if alpha_count > best_alpha_count:
-                        best_encoding = encoding
+                encoding = _get_encoding(open(path).read())
                 table = pandas.read_csv(
-                    path, encoding=best_encoding, skipinitialspace=True)
+                    path, encoding=encoding, skipinitialspace=True)
         elif path.endswith('.msg'):
             table = pandas.read_msgpack(path)
         elif path.endswith('.json'):
@@ -88,3 +81,14 @@ def import_table(request):
     return import_upload(request, TableType, {
         'class': 'editable-table',
     })
+
+
+def _get_encoding(content):
+    best_encoding = chardet.detect(content)['encoding']
+    best_alpha_count = 0
+    for encoding in [best_encoding, 'cp850']:
+        alpha_count = sum(x.isalpha() for x in content.decode(encoding))
+        if alpha_count > best_alpha_count:
+            best_encoding = encoding
+            best_alpha_count = alpha_count
+    return best_encoding
