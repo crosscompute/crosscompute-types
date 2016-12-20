@@ -31,6 +31,7 @@ setup(
         'pytest-runner',
     ],
     install_requires=[
+        'chardet',
         'crosscompute>=0.6.0',
         'six',
     ],
