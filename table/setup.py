@@ -36,7 +36,6 @@ setup(
         'six',
     ],
     tests_require=[
-        'pandas',
         'pytest',
     ],
     entry_points=ENTRY_POINTS)

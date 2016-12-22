@@ -22,7 +22,7 @@ setup(
     keywords='web pyramid pylons crosscompute',
     zip_safe=True,
     install_requires=[
-        'crosscompute>=0.6.1',
+        'crosscompute>=0.6.2',
         'crosscompute-integer>=0.6.0',
         'crosscompute-text>=0.6.0',
         'crosscompute-image>=0.6.0',

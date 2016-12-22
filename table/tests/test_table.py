@@ -1,4 +1,5 @@
 from crosscompute.tests import run
+from crosscompute_table.fallbacks import pandas
 
 
 def test_good_input(tmpdir):
@@ -13,7 +14,6 @@ if __name__ == '__main__':
     argument_parser.add_argument('--a_table_path')
     args = argument_parser.parse_args()
     if args.a_table_path:
-        from pandas import read_csv
-        table = read_csv(args.a_table_path)
+        table = pandas.read_csv(args.a_table_path)
         print('column_count = %s' % len(table.columns))
         print('row_count = %s' % len(table.values))
