@@ -29,6 +29,5 @@ Installing additional packages will enable additional features.
     - shapely
     - geometryIO
 
-For convenience, you can install the full set using these scripts.
+For convenience, you can install the full set using `these Ansible scripts <https://github.com/crosscompute/crosscompute-environments-ansible>`_.
 
-- https://github.com/crosscompute/crosscompute-environments-ansible
