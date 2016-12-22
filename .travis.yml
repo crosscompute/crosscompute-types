@@ -25,4 +25,4 @@ install:
   - pushd geotable
   - pip install -e .
   - popd
-script: pytest
+script: py.test
