@@ -7,7 +7,7 @@ install:
   - pip install -U crosscompute
   - pip install -U beautifulsoup4 pytest pytest-mock werkzeug
 
-  - pushd integer 
+  - pushd integer
   - pip install -e .
   - popd
 
