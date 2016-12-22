@@ -11,7 +11,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'CHANGES.rst', 'README.rst'])
 setup(
     name='crosscompute-geotable',
-    version='0.6.0',
+    version='0.6.1',
     description='Geotable data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -28,8 +28,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'crosscompute>=0.6.0',
-        'crosscompute-table>=0.6.0',
+        'crosscompute>=0.6.1',
+        'crosscompute-table>=0.6.1',
         'six',
     ],
     entry_points=ENTRY_POINTS)
