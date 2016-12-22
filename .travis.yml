@@ -6,9 +6,24 @@ python:
 install:
   - pip install -U crosscompute
   - pip install -U pandas
-  - cd integer && pip install -e .
-  - cd text && pip install -e .
-  - cd table && pip install -e .
-  - cd image && pip install -e .
-  - cd geotable && pip install -e .
+
+  - pushd integer 
+  - pip install -e .
+  - popd
+
+  - pushd text
+  - pip install -e .
+  - popd
+
+  - pushd table
+  - pip install -e .
+  - popd
+
+  - pushd image
+  - pip install -e .
+  - popd
+
+  - pushd geotable
+  - pip install -e .
+  - popd
 script: pytest
