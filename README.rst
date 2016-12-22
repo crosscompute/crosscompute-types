@@ -11,3 +11,24 @@ Use these data types to build computational apps using the CrossCompute framewor
 - image
 - table
 - geotable
+
+
+Install
+-------
+Run the following command inside your virtual environment for basic functionality. ::
+
+    pip install -U crosscompute-types
+
+Installing additional packages will enable additional features. 
+
+- table
+    - pandas
+- geotable
+    - matplotlib
+    - gdal
+    - shapely
+    - geometryIO
+
+For convenience, you can install the full set using these scripts.
+
+- https://github.com/crosscompute/crosscompute-environments-ansible
