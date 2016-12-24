@@ -2,7 +2,7 @@ from crosscompute.types import DataType, DataTypeError
 
 
 class IntegerType(DataType):
-    suffixes = 'integer', 'int', 'count', 'length'
+    suffixes = 'integer', 'int', 'count'
     formats = 'txt',
     template = 'crosscompute_integer:type.jinja2'
 
