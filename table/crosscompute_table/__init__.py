@@ -58,12 +58,8 @@ class TableType(DataType):
 
     @classmethod
     def parse(Class, text):
-        try:
-            table = pandas.read_csv(
-                StringIO(text), encoding='utf-8', skipinitialspace=True)
-        except (TypeError, ValueError):
-            raise TypeError('expected_table')
-        return table
+        return pandas.read_csv(
+            StringIO(text), encoding='utf-8', skipinitialspace=True)
 
     @classmethod
     def format(Class, table, format_name='csv'):
