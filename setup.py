@@ -21,6 +21,9 @@ setup(
     url='https://crosscompute.com/docs',
     keywords='web pyramid pylons crosscompute',
     zip_safe=True,
+    setup_requires=[
+        'pytest-runner'
+    ],
     install_requires=[
         'crosscompute>=0.6.2',
         'crosscompute-integer>=0.6.0',

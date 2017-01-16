@@ -27,6 +27,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
+    setup_requires=[
+        'pytest-runner'
+    ],
     install_requires=[
         'crosscompute>=0.6.1',
         'crosscompute-table>=0.6.1',
