@@ -1,6 +1,3 @@
-table.editable td:focus {
-  border: thin solid green; }
-
 .scrollable {
   height: 300px;
   overflow: auto; }
