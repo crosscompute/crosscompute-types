@@ -1,8 +1,5 @@
-.table-editable td:hover {
-  outline: #99ceff auto 3px; }
-
-.table-editable-input, .table-editable td:focus {
-  outline: #337ab7 auto 3px; }
+table.editable td:focus {
+  border: thin solid green; }
 
 .scrollable {
   height: 300px;

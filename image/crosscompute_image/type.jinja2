@@ -1,12 +1,11 @@
-{% macro head_style_loaded() %}{% endmacro %}
-{% macro head_style_inline() %}{% endmacro %}
-{% macro head_script_inline() %}{% endmacro %}
-{% macro body_script_loaded() %}{% endmacro %}
-{% macro body_script_inline() %}{% endmacro %}
+{% macro head_style_loaded(request) %}{% endmacro %}
+{% macro head_style_inline(request) %}{% endmacro %}
+{% macro head_script_inline(request) %}{% endmacro %}
+{% macro body_script_loaded(request) %}{% endmacro %}
+{% macro body_script_inline(request) %}{% endmacro %}
 
-{% macro render_argument(data_item) %}
-{% endmacro %}
+{% macro render_argument(request, data_item) %}{% endmacro %}
 
-{% macro render_property(data_item, stamp='') %}
+{% macro render_property(request, data_item, stamp='') %}
 <div><img src="{{ data_item.format_value() }}"></div>
 {% endmacro %}
