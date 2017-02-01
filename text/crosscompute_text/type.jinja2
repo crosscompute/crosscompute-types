@@ -11,5 +11,5 @@
 
 {% macro render_property(request, data_item, stamp='') %}
 {% from 'crosscompute:types/string.jinja2' import render_property %}
-{{ render_property(data_item, stamp=stamp) }}
+{{ render_property(request, data_item, stamp=stamp) }}
 {% endmacro %}
