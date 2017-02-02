@@ -50,7 +50,7 @@ CC.geotable.definitions['{{ key }}'] = [[
 [{{ geometry_type_id }}, {{ geometry_coordinates }}, {
 {%- for k, v in local_properties.items() %}
 '{{ k }}': '{{ v }}'
-{%- if not loop.last %},{% endif %}
+{%- if not loop.last %}, {% endif %}
 {% endfor -%}
 }]
 {%- if not loop.last %},{% endif %}
