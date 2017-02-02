@@ -1,3 +1,7 @@
+0.6
+---
+- Use mapbox.js 3.0.1
+
 0.5
 ---
 - Accept MAPBOX_TOKEN environment variable
