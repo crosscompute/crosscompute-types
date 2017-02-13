@@ -12,5 +12,5 @@ class ImageType(DataType):
         return path
 
     @classmethod
-    def format(Class, path):
+    def render(Class, path):
         return get_result_file_url(path)

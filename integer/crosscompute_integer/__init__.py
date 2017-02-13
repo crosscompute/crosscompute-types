@@ -23,5 +23,5 @@ class IntegerType(DataType):
         return integer
 
     @classmethod
-    def format(Class, integer):
+    def render(Class, integer):
         return '%d' % integer

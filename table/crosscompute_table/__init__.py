@@ -62,7 +62,7 @@ class TableType(DataType):
             StringIO(text), encoding='utf-8', skipinitialspace=True)
 
     @classmethod
-    def format(Class, table, format_name='csv'):
+    def render(Class, table, format_name='csv'):
         if format_name == 'csv':
             return table.to_csv(encoding='utf-8', index=False)
         elif format_name == 'json':
