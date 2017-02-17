@@ -11,7 +11,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-table',
-    version='0.6.3',
+    version='0.6.5',
     description='Table data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -32,7 +32,7 @@ setup(
     ],
     install_requires=[
         'chardet',
-        'crosscompute>=0.6.3',
+        'crosscompute>=0.6.5',
         'six',
     ],
     tests_require=[

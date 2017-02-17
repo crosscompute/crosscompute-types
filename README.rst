@@ -8,6 +8,7 @@ Use these data types to build computational apps using the CrossCompute framewor
 
 - integer
 - text
+- `select <https://github.com/salah93/crosscompute-select>`_
 - image
 - table
 - geotable
@@ -30,4 +31,3 @@ Installing additional packages will enable additional features.
     - geometryIO
 
 For convenience, you can install the full set using `these Ansible scripts <https://github.com/crosscompute/crosscompute-environments-ansible>`_.
-
