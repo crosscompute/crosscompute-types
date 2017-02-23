@@ -75,7 +75,7 @@ class TableType(DataType):
 
 def import_table(request):
     return import_upload(request, TableType, {
-        'class': 'editable-table',
+        'class': 'editable',
     })
 
 
