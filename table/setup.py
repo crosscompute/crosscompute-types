@@ -11,7 +11,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-table',
-    version='0.6.5',
+    version='0.6.5.1',
     description='Table data type plugin for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
