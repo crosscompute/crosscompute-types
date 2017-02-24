@@ -1,5 +1,5 @@
 {% from 'invisibleroads_uploads:templates/parts.jinja2' import upload_button %}
-{% set maximum_row_count = 100 %}
+{% set maximum_row_count = 50 %}
 
 {% macro head_style_loaded(request) %}
 <link rel="stylesheet" href="//api.mapbox.com/mapbox.js/v3.0.1/mapbox.css">
@@ -25,13 +25,11 @@ $.each(CC.geotable.definitions, draw_map);
 {% macro render_argument(request, data_item) %}
 {% set key = data_item.key %}
 {{ upload_button(request, id='%s-upload-button' % key, text='Upload', class='btn-lg geotable-upload', data_name=key) }}
-{{ render_property(request, data_item) }}
-<input name="{{ key }}" type="hidden" value="{{ data_item.file_location }}">
+<div id="{{ key }}">{{ render_property(request, data_item) }}</div>
 {% endmacro %}
 
 {% macro render_property(request, data_item, stamp='') %}
 {% set key = data_item.key + stamp %}
-<div id="{{ key }}">
 {% set table = data_item.value %}
 
 {% if table is not none %}
@@ -68,5 +66,5 @@ CC.geotable.definitions['{{ key }}'] = [[
 </script>
 {% endif %}
 
-</div>
+<input name="{{ key }}" type="hidden" value="{{ data_item.file_location }}">
 {%- endmacro %}

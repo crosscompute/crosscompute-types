@@ -1,5 +1,5 @@
 {% from 'invisibleroads_uploads:templates/parts.jinja2' import upload_button %}
-{% set maximum_row_count = 100 %}
+{% set maximum_row_count = 50 %}
 
 {% macro head_style_loaded(request) %}{% endmacro %}
 
@@ -18,21 +18,11 @@ x.import_url = '{{ request.route_path('table/import_table') }}';
 {% set key = data_item.key %}
 {% set table = data_item.value %}
 {{ upload_button(request, id='%s-upload-button' % key, text='Upload', class='btn-lg table-upload', data_name=key) }}
-
-{% if table is not none and table.index.shape[0] > maximum_row_count %}
-{{ render_property(request, data_item, class='', editable=False) }}
-<input name="{{ key }}" type="hidden" value="{{ data_item.file_location }}">
-{% else %}
-{{ render_property(request, data_item, class='editable', editable=True) }}
-<input name="{{ key }}_csv" type="hidden">
-{% endif %}
-
+<div id="{{ key }}">{{ render_property(request, data_item, class='editable') }}</div>
 {% endmacro %}
 
-{% macro render_property(request, data_item, stamp='', class='', editable=False) %}
+{% macro render_property(request, data_item, stamp='', class='') %}
 {% set key = data_item.key + stamp %}
-<div id="{{ key }}">
-
 {% set table = data_item.value %}
 
 <div id="{{ key }}-scrollable" class="scrollable">
@@ -44,10 +34,9 @@ x.import_url = '{{ request.route_path('table/import_table') }}';
 {% if is_big %}
 {% set table = table[:maximum_row_count] %}
 {% set class = '' %}
-{% set editable = False %}
 {% endif %}
 
-<table id="{{ key }}-table" class="table {{ class }}" {% if editable %}contenteditable="true"{% endif %}>
+<table id="{{ key }}-table" class="table {{ class }}" {% if 'editable' in class %}contenteditable="true"{% endif %}>
 <thead>
 <tr>{% for column in table.columns %}<th>{{ column }}</th>{% endfor %}</tr>
 </thead>
@@ -64,8 +53,9 @@ x.import_url = '{{ request.route_path('table/import_table') }}';
 </div>
 
 {% if is_big %}
-<div class="alert alert-warning">Showing first {{ '{:,}'.format(maximum_row_count) }} out of {{ '{:,}'.format(row_count) }} rows</div>
+<div class="alert alert-warning">Showing the first {{ '{:,}'.format(maximum_row_count) }} out of {{ '{:,}'.format(row_count) }} rows</div>
+<input name="{{ key }}" type="hidden" value="{{ data_item.file_location }}">
+{% else %}
+<input name="{{ key }}_csv" type="hidden">
 {% endif %}
-
-</div>
 {% endmacro %}
