@@ -1,4 +1,5 @@
 {% from 'invisibleroads_uploads:templates/parts.jinja2' import upload_button %}
+{% set maximum_row_count = 250 %}
 
 {% macro head_style_loaded(request) %}
 <link rel="stylesheet" href="//api.mapbox.com/mapbox.js/v3.0.1/mapbox.css">
@@ -24,16 +25,25 @@ $.each(CC.geotable.definitions, draw_map);
 {% macro render_argument(request, data_item) %}
 {% set key = data_item.key %}
 {{ upload_button(request, id='%s-upload-button' % key, text='Upload', class='btn-lg geotable-upload', data_name=key) }}
-<div id="{{ key }}">{{ render_property(request, data_item) }}</div>
+{{ render_property(request, data_item) }}
 <input name="{{ key }}" type="hidden" value="{{ data_item.file_location }}">
 {% endmacro %}
 
 {% macro render_property(request, data_item, stamp='') %}
 {% set key = data_item.key + stamp %}
-{% if data_item.value is not none %}
-{% set items, properties = data_item.value.interpret() %}
+<div id="{{ key }}">
+{% set table = data_item.value %}
+
+{% if table is not none %}
+{% set items, properties = table.interpret() %}
 {% set column_names = items[0][-1].columns if items else [] %}
 <div id="{{ key }}-map" class="geotable-map"></div>
+
+{% set row_count = table.index.shape[0] %}
+{% if row_count > maximum_row_count %}
+<div class="alert alert-warning">Showing {{ '{:,}'.format(maximum_row_count) }} features sampled randomly from {{ '{:,}'.format(row_count) }} features</div>
+{% endif %}
+
 <table id="{{ key }}-table" class="table geotable-table">
 <thead><tr>{% for column_name in column_names %}<th>{{ column_name }}</th>{% endfor %}</tr></thead>
 {% for geometry_type_id, geometry_coordinates, local_properties, local_table in items %}
@@ -57,4 +67,6 @@ CC.geotable.definitions['{{ key }}'] = [[
 {% endfor %}], {{ properties }}];
 </script>
 {% endif %}
+
+</div>
 {%- endmacro %}

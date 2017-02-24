@@ -165,6 +165,8 @@ def import_geotable(request):
 
 
 def _interpret(table):
+    if len(table) > 250:
+        table = table.sample(250)
     items, properties = [], {}
     geometry_column_names = get_geometry_column_names(table.columns)
     if not geometry_column_names:
