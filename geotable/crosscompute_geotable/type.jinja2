@@ -41,7 +41,7 @@ $.each(CC.geotable.definitions, draw_map);
 
 {% set row_count = table.index.shape[0] %}
 {% if row_count > maximum_row_count %}
-<div class="alert alert-warning">Showing {{ '{:,}'.format(maximum_row_count) }} features sampled randomly from {{ '{:,}'.format(row_count) }} features</div>
+<div class="alert alert-warning">Showing first {{ '{:,}'.format(maximum_row_count) }} out of {{ '{:,}'.format(row_count) }} features</div>
 {% endif %}
 
 <table id="{{ key }}-table" class="table geotable-table">
