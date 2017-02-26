@@ -53,7 +53,7 @@ x.import_url = '{{ request.route_path('table/import_table') }}';
 </div>
 
 {% if is_big %}
-<div class="alert alert-warning">Showing the first {{ '{:,}'.format(maximum_row_count) }} out of {{ '{:,}'.format(row_count) }} rows</div>
+<div class="alert alert-warning">Showing first {{ '{:,}'.format(maximum_row_count) }} out of {{ '{:,}'.format(row_count) }} rows</div>
 <input name="{{ key }}" type="hidden" value="{{ data_item.file_location }}">
 {% else %}
 <input name="{{ key }}_csv" type="hidden">
