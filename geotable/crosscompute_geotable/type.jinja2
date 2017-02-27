@@ -33,12 +33,18 @@ $.each(CC.geotable.definitions, draw_map);
 {% set table = data_item.value %}
 
 {% if table is not none %}
+{% set row_count = table.index.shape[0] %}
+{% set is_big = row_count > maximum_row_count %}
+
+{% if is_big %}
+{% set table = table[:maximum_row_count] %}
+{% endif %}
+
 {% set items, properties = table.interpret() %}
 {% set column_names = items[0][-1].columns if items else [] %}
 <div id="{{ key }}-map" class="geotable-map"></div>
 
-{% set row_count = table.index.shape[0] %}
-{% if row_count > maximum_row_count %}
+{% if is_big %}
 <div class="alert alert-warning">Showing first {{ '{:,}'.format(maximum_row_count) }} out of {{ '{:,}'.format(row_count) }} features</div>
 {% endif %}
 

@@ -68,15 +68,9 @@ class TableType(DataType):
         elif format_name == 'json':
             return table.to_json(orient='split')
 
-    @classmethod
-    def match(Class, table):
-        return hasattr(table, 'iterrows')
-
 
 def import_table(request):
-    return import_upload(request, TableType, {
-        'class': 'editable',
-    })
+    return import_upload(request, TableType, {'class': 'editable'})
 
 
 def _get_encoding(content):
