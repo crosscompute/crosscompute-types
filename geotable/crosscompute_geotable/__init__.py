@@ -1,3 +1,5 @@
+import numpy as np
+import pandas as pd
 import re
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
@@ -8,9 +10,8 @@ from invisibleroads_macros.math import define_normalize
 from invisibleroads_macros.table import normalize_key
 from math import floor
 from os.path import exists
-from six import create_bound_method
 
-from .fallbacks import array, colorConverter, _parse_geometry, rgb2hex
+from .fallbacks import colorConverter, _parse_geometry, rgb2hex
 
 
 # These color schemes are courtesy of http://colorbrewer2.org
@@ -113,13 +114,10 @@ SUMMARY_TYPE_EXPRESSION = r'(?: from (mean|sum))?'
 FILL_COLOR_COLUMN_PATTERN = re.compile(r'fill (color|%s)' % '|'.join(
     HEX_ARRAY_BY_COLOR_SCHEME) + SUMMARY_TYPE_EXPRESSION)
 RADIUS_COLUMN_PATTERN = re.compile(
-    r'radius in (pixels|meters)'
-    r'(?: (range) (\d+) (\d+))?' + SUMMARY_TYPE_EXPRESSION)
-TRANSFORMS = [
-]
+    r'radius in pixels(?: (range) (\d+) (\d+))?' + SUMMARY_TYPE_EXPRESSION)
 
 
-class GeotableType(TableType):
+class GeoTableType(TableType):
     suffixes = 'geotable',
     formats = TableType.formats + ('zip',)
     style = 'crosscompute_geotable:assets/part.min.css'
@@ -135,7 +133,6 @@ class GeotableType(TableType):
             raise IOError
         if path.endswith('.zip'):
             import geometryIO
-            from crosscompute_table import pandas as pd
             [
                 proj4,
                 geometries,
@@ -150,52 +147,55 @@ class GeotableType(TableType):
             geometries = transform_geometries(geometries, drop_z)
             geometries = transform_geometries(geometries, flip_xy)
             # Generate table
-            table = pd.DataFrame(
-                field_packs, columns=[x[0] for x in field_definitions])
+            table = pd.DataFrame(field_packs, columns=[
+                x[0] for x in field_definitions])
             table['WKT'] = [x.wkt for x in geometries]
         else:
-            table = super(GeotableType, Class).load(path)
-        # TODO: Consider whether there is a better way to do this
-        table.interpret = create_bound_method(_interpret, table)
-        return table
+            table = super(GeoTableType, Class).load(path)
+        return GeoTable(table)
+
+
+class GeoTable(pd.DataFrame):
+
+    @property
+    def _constructor(self):
+        return GeoTable
+
+    def interpret(self):
+        items, properties = [], {}
+        geometry_column_names = get_geometry_column_names(self.columns)
+        if not geometry_column_names:
+            raise DataTypeError(
+                'geometry columns missing (%s)' % ', '.join(self.columns))
+        if len(geometry_column_names) > 1:
+            parse_geometry = _parse_point_from_tuple
+        else:
+            parse_geometry = _parse_geometry
+        transforms = []
+        for get_transform in [
+                _get_fill_color_transform,
+                _get_radius_transform]:
+            transform = get_transform(self, geometry_column_names)
+            if not transform:
+                continue
+            transforms.append(transform)
+
+        for geometry_value, local_table in self.groupby(geometry_column_names):
+            geometry_type_id, geometry_coordinates = parse_geometry(
+                geometry_value)
+            local_properties = {}
+            for transform in transforms:
+                local_properties, local_table = transform(
+                    local_properties, local_table)
+            local_table = local_table.drop(geometry_column_names, axis=1)
+            items.append((
+                geometry_type_id, geometry_coordinates, local_properties,
+                local_table))
+        return items, properties
 
 
 def import_geotable(request):
-    return import_upload(request, GeotableType, {})
-
-
-def _interpret(table):
-    items, properties = [], {}
-    geometry_column_names = get_geometry_column_names(table.columns)
-    if not geometry_column_names:
-        raise DataTypeError(
-            'geometry columns missing (%s)' % ', '.join(table.columns))
-    if len(geometry_column_names) > 1:
-        parse_geometry = _parse_point_from_tuple
-    else:
-        parse_geometry = _parse_geometry
-    transforms = []
-    for get_transform in [
-        _get_fill_color_transform,
-        _get_radius_transform,
-    ]:
-        transform = get_transform(table, geometry_column_names)
-        if not transform:
-            continue
-        transforms.append(transform)
-
-    for geometry_value, local_table in table.groupby(
-            geometry_column_names):
-        geometry_type_id, geometry_coordinates = parse_geometry(geometry_value)
-        local_properties = {}
-        for transform in transforms:
-            local_properties, local_table = transform(
-                local_properties, local_table)
-        local_table = local_table.drop(geometry_column_names, axis=1)
-        items.append((
-            geometry_type_id, geometry_coordinates, local_properties,
-            local_table))
-    return items, properties
+    return import_upload(request, GeoTableType, {})
 
 
 def get_geometry_column_names(column_names):
@@ -235,7 +235,6 @@ def _get_fill_color_transform(table, geometry_column_names):
     if not column_name:
         return
     color_scheme, summary_type = name_parts
-    local_property_name = 'fillColor'
     if color_scheme == 'color':
         summarize = _define_summarize_colors(summary_type or 'mean')
         normalize = rgb2hex
@@ -253,8 +252,7 @@ def _get_fill_color_transform(table, geometry_column_names):
                 index = 0
             return hex_array[index]
 
-    return _define_transform(
-        column_name, local_property_name, normalize, summarize)
+    return _define_transform(column_name, 'fillColor', normalize, summarize)
 
 
 def _get_hex_array(color_scheme):
@@ -269,14 +267,13 @@ def _get_radius_transform(table, geometry_column_names):
         RADIUS_COLUMN_PATTERN, table.columns)
     if not column_name:
         return
-    scale, has_range, y_min, y_max, summary_type = name_parts
-    local_property_name = 'radius_in_' + scale
+    has_range, y_min, y_max, summary_type = name_parts
     summarize = _define_summarize_numbers(summary_type or 'sum')
     normalize = define_normalize(_get_summary_domain(
         table, geometry_column_names, column_name, summarize,
     ), [float(y_min), float(y_max)]) if has_range else lambda x: x
     return _define_transform(
-        column_name, local_property_name, normalize, summarize)
+        column_name, 'radius_in_pixels', normalize, summarize)
 
 
 def _prepare_column_name(pattern, column_names):
@@ -303,7 +300,7 @@ def _define_summarize_colors(summary_type):
 
     def _get_rgb_array(x):
         try:
-            return array(colorConverter.to_rgb(x))
+            return np.array(colorConverter.to_rgb(x))
         except ValueError:
             raise DataTypeError('could not parse color (%s)' % x)
 

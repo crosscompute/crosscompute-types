@@ -1,12 +1,11 @@
 import chardet
+import pandas as pd
 from invisibleroads_macros.disk import get_file_extension
 from crosscompute.exceptions import DataTypeError
 from crosscompute.scripts.serve import import_upload
 from crosscompute.types import DataType
 from io import StringIO
 from os.path import exists
-
-from .fallbacks import pandas
 
 
 class TableType(DataType):
@@ -39,18 +38,18 @@ class TableType(DataType):
             raise IOError
         if path.endswith('.csv'):
             try:
-                table = pandas.read_csv(
+                table = pd.read_csv(
                     path, encoding='utf-8', skipinitialspace=True)
             except UnicodeDecodeError:
                 encoding = _get_encoding(open(path).read())
-                table = pandas.read_csv(
+                table = pd.read_csv(
                     path, encoding=encoding, skipinitialspace=True)
         elif path.endswith('.msg'):
-            table = pandas.read_msgpack(path)
+            table = pd.read_msgpack(path)
         elif path.endswith('.json'):
-            table = pandas.read_json(path, orient='split')
+            table = pd.read_json(path, orient='split')
         elif path.endswith('.xls') or path.endswith('.xlsx'):
-            table = pandas.read_excel(path)
+            table = pd.read_excel(path)
         else:
             raise DataTypeError(
                 'file format not supported (%s)' % get_file_extension(path))
@@ -58,7 +57,7 @@ class TableType(DataType):
 
     @classmethod
     def parse(Class, text):
-        return pandas.read_csv(
+        return pd.read_csv(
             StringIO(text), encoding='utf-8', skipinitialspace=True)
 
     @classmethod

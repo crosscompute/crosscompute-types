@@ -52,12 +52,9 @@ def _rgb2hex(x):
 
 try:
     from matplotlib.colors import colorConverter, rgb2hex
-    from numpy import array
 except ImportError:
-    from crosscompute_table._pandas import Array
     colorConverter = ColorConverter()
     rgb2hex = _rgb2hex
-    array = Array
     print('Please install matplotlib for full color support')
 try:
     import geometryIO  # noqa

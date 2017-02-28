@@ -33,6 +33,7 @@ setup(
     install_requires=[
         'chardet',
         'crosscompute>=0.6.5',
+        'pandas',
         'six',
     ],
     tests_require=[

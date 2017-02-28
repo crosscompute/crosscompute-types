@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 ENTRY_POINTS = """
 [crosscompute.types]
-geotable = crosscompute_geotable:GeotableType
+geotable = crosscompute_geotable:GeoTableType
 """
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
