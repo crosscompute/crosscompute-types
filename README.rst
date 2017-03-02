@@ -1,17 +1,13 @@
-.. image:: https://travis-ci.org/crosscompute/crosscompute-types.svg?branch=master
-    :target: https://travis-ci.org/crosscompute/crosscompute-types
-
-
 CrossCompute Types
 ==================
 Use these data types to build computational apps using the CrossCompute framework.
 
-- integer
-- text
+- `integer <https://github.com/crosscompute/crosscompute-integer>`_
+- `text <https://github.com/crosscompute/crosscompute-text>`_
 - `select <https://github.com/salah93/crosscompute-select>`_
-- image
-- table
-- geotable
+- `image <https://github.com/crosscompute/crosscompute-image>`_
+- `table <https://github.com/crosscompute/crosscompute-table>`_
+- `geotable <https://github.com/crosscompute/crosscompute-geotable>`_
 
 
 Install
@@ -22,8 +18,6 @@ Run the following command inside your virtual environment for basic functionalit
 
 Installing additional packages will enable additional features. 
 
-- table
-    - pandas
 - geotable
     - matplotlib
     - gdal
