@@ -18,7 +18,7 @@ setup(
     ],
     author='CrossCompute Inc',
     author_email='support@crosscompute.com',
-    url='https://crosscompute.com/docs',
+    url='https://crosscompute.com/developers',
     keywords='web pyramid pylons crosscompute',
     zip_safe=True,
     setup_requires=[
