@@ -7,7 +7,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst'])
 setup(
     name='crosscompute-types',
-    version='0.6.8',
+    version='0.6.9',
     description='Default data type plugins for CrossCompute',
     long_description=DESCRIPTION,
     classifiers=[
@@ -25,11 +25,11 @@ setup(
         'pytest-runner'
     ],
     install_requires=[
-        'crosscompute>=0.6.8',
+        'crosscompute>=0.6.9',
         'crosscompute-integer>=0.6.7',
         'crosscompute-text>=0.6.7',
         'crosscompute-select>=0.6.7',
         'crosscompute-table>=0.6.7.1',
-        'crosscompute-image>=0.6.7.1',
+        'crosscompute-image>=0.6.7.2',
         'crosscompute-geotable>=0.6.7',
     ])
