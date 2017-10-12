@@ -22,7 +22,7 @@ setup(
     keywords='web pyramid pylons crosscompute',
     zip_safe=True,
     setup_requires=[
-        'pytest-runner'
+        'pytest-runner',
     ],
     install_requires=[
         'crosscompute>=0.6.9',
