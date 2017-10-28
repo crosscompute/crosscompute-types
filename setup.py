@@ -29,7 +29,7 @@ setup(
         'crosscompute-integer>=0.7.0',
         'crosscompute-text>=0.7.0',
         'crosscompute-table>=0.7.0',
-        'crosscompute-select>=0.7.0',
+        'crosscompute-select',
         'crosscompute-image>=0.7.0',
         'crosscompute-audio',
         'crosscompute-video',
