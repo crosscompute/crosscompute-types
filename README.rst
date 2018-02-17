@@ -20,11 +20,10 @@ Run the following command inside your virtual environment for basic functionalit
 
 Installing additional packages will enable additional features. 
 
-- geotable
     - matplotlib
     - gdal
     - shapely
-    - geometryIO
+    - geotable
 
 For convenience, you can install the full set using `these Ansible scripts <https://github.com/crosscompute/crosscompute-environments-ansible>`_.
 
